@@ -56,9 +56,12 @@ class Piece:
     def __str__(self) -> str:
         return self.symbol
 
+    def get_legal_moves(self, board: Array2D) -> set[Position]:
+        return self.allowed_moves(board).union(self.allowed_takes(board))
+
     def allowed_moves(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_moves(self.is_white, pos)
+        new_positions = self.behaviour.allowed_moves(board, pos, self.is_white)
         new_positions = {
             p for p in new_positions if check_position_in_board_shape(p, board)
         }
@@ -66,7 +69,7 @@ class Piece:
 
     def allowed_takes(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_takes(self.is_white, pos)
+        new_positions = self.behaviour.allowed_takes(board, pos, self.is_white)
         new_positions = {
             p for p in new_positions if check_position_in_board_shape(p, board)
         }
