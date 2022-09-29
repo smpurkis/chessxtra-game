@@ -1,5 +1,5 @@
 import importlib
-from Array import Array2D
+from Array import Array2D, check_position_is_on_board
 
 Position = tuple[int, int]
 
@@ -28,14 +28,6 @@ class PieceNotAllowed(Exception):
     pass
 
 
-def check_position_in_board_shape(
-    position: Position, board: Array2D
-) -> bool:
-    return (0 <= position[0] <= board.shape[0] - 1) and (
-        0 <= position[1] <= board.shape[1] - 1
-    )
-
-
 class Piece:
     def __init__(self, position: Position, symbol: str) -> None:
         self.position = position
@@ -48,30 +40,34 @@ class Piece:
         self.is_white = symbol.isupper()
         self.colour = "white" if self.is_white else "black"
         self.in_play = True
+        self.has_moved = False
         behaviour_import = f"{self.full_symbol.lower().capitalize()}Behaviour"
         self.behaviour = getattr(
-            importlib.import_module(behaviour_import), behaviour_import
+            importlib.import_module(f"pieces.{behaviour_import}"), behaviour_import
         )
 
     def __str__(self) -> str:
         return self.symbol
+
+    def __repr__(self) -> str:
+        return f"{self.colour.capitalize()} {self.full_symbol.lower().capitalize()} {self.position}"
 
     def get_legal_moves(self, board: Array2D) -> set[Position]:
         return self.allowed_moves(board).union(self.allowed_takes(board))
 
     def allowed_moves(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_moves(board, pos, self.is_white)
+        new_positions = self.behaviour.allowed_moves(self, board, pos, self.is_white)
         new_positions = {
-            p for p in new_positions if check_position_in_board_shape(p, board)
+            p for p in new_positions if check_position_is_on_board(p, board.shape)
         }
         return new_positions
 
     def allowed_takes(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_takes(board, pos, self.is_white)
+        new_positions = self.behaviour.allowed_takes(self, board, pos, self.is_white)
         new_positions = {
-            p for p in new_positions if check_position_in_board_shape(p, board)
+            p for p in new_positions if check_position_is_on_board(p, board.shape)
         }
         return new_positions
 

@@ -1,27 +1,39 @@
+from cmath import pi
 from Array import Array2D
 from pieces.Piece import Piece, Position
 
 
 class Game:
-    def __init__(self, shape: tuple[int, int] = (4, 6)) -> None:
+    def __init__(
+        self, shape: tuple[int, int] = (6, 4), setup: str = "rnbk\npppp"
+    ) -> None:
         self.shape = shape
-        self.board = Array2D()
-        self.setup()
+        self.board = Array2D(shape=shape)
+        self.setup(setup_position=setup)
 
-    def setup(self, setup_position: str = "rnbk\npppp"):
+    def setup(self, setup_position: str):
         setup_lines = setup_position.split("\n")
-        for piece_code, col_no in zip(setup_lines[0], range(self.board.shape[0])):
-            self.board[0][col_no] = Piece((col_no, 0), piece_code)
+        for piece_code, col_no in zip(setup_lines[0], range(self.board.shape[1])):
+            self.board[0][col_no] = Piece((0, col_no), piece_code)
             self.board[-1][col_no] = Piece(
-                (col_no, self.board.shape[1]), piece_code.upper()
+                (self.board.shape[0] - 1, col_no), piece_code.upper()
             )
 
         if len(setup_lines) > 1:
-            for piece_code, col_no in zip(setup_lines[1], range(self.board.shape[0])):
-                self.board[1][col_no] = Piece((col_no, 1), piece_code)
+            for piece_code, col_no in zip(setup_lines[1], range(self.board.shape[1])):
+                self.board[1][col_no] = Piece((1, col_no), piece_code)
                 self.board[-2][col_no] = Piece(
-                    (col_no, self.board.shape[1] - 1), piece_code.upper()
+                    (self.board.shape[0] - 2, col_no), piece_code.upper()
                 )
+
+    def get_all_legal_moves(self) -> dict[Piece, set[Position]]:
+        legal_moves = {}
+        for row_no in range(self.board.shape[0]):
+            for col_no in range(self.board.shape[1]):
+                piece: Piece or str = self.board[row_no][col_no]
+                if isinstance(piece, Piece):
+                    legal_moves[piece] = piece.get_legal_moves(self.board)
+        return legal_moves
 
     def get_allowed_moves(self, pos: Position) -> set[Position]:
         piece: Piece = self.board[pos[1]][pos[0]]
@@ -32,7 +44,7 @@ class Game:
             if isinstance(mp_piece, Piece):
                 if mp_piece.is_white == piece.is_white:
                     filt_all_ms.add(move_pos)
-                
+
         allowed_takes = piece.allowed_takes()
         filt_all_ts = set()
         for take_pos in allowed_takes:
@@ -73,7 +85,9 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game()
+    game = Game(setup="rrrr\npppp")
     print(game.board)
-    print(game.move((0, 1), (0, 2)))
+    legal_moves = game.get_all_legal_moves()
+    # print(game.board[1][1].get_legal_moves(game.board))
+    # print(game.move((0, 1), (0, 2)))
     print(game.board)
