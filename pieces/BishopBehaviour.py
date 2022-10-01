@@ -1,20 +1,16 @@
 from pieces.Piece import Piece, Position
-from Array import (
-    Array2D,
-    sort_by_distance,
-    get_col_row_positions,
-)
+from Array import Array2D, sort_by_distance, get_diagonal_positions
 
 
-class RookBehaviour:
+class BishopBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
     ) -> set[Position]:
         index = -1 if is_white else 1
-        col_row_positions = get_col_row_positions(pos, board.shape)
+        diagonal_positions = get_diagonal_positions(pos, board.shape)
         filt_all_ms = set()
-        for positions in col_row_positions:
+        for positions in diagonal_positions:
             for dir_positions in positions:
                 dir_positions = sort_by_distance(piece.position, dir_positions)
                 for move_pos in dir_positions:
@@ -30,7 +26,7 @@ class RookBehaviour:
         piece: Piece, board: Array2D, pos: Position, is_white: bool
     ) -> set[Position]:
         index = -1 if is_white else 1
-        col_row_positions = get_col_row_positions(pos, board.shape)
+        col_row_positions = get_diagonal_positions(pos, board.shape)
         filt_all_ts = set()
         for positions in col_row_positions:
             for dir_positions in positions:

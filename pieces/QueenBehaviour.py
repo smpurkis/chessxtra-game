@@ -1,20 +1,24 @@
+from turtle import position
 from pieces.Piece import Piece, Position
 from Array import (
     Array2D,
     sort_by_distance,
     get_col_row_positions,
+    get_diagonal_positions,
 )
 
 
-class RookBehaviour:
+class QueenBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
     ) -> set[Position]:
-        index = -1 if is_white else 1
-        col_row_positions = get_col_row_positions(pos, board.shape)
+        position_lines = [
+            *get_col_row_positions(pos, board.shape),
+            *get_diagonal_positions(pos, board.shape),
+        ]
         filt_all_ms = set()
-        for positions in col_row_positions:
+        for positions in position_lines:
             for dir_positions in positions:
                 dir_positions = sort_by_distance(piece.position, dir_positions)
                 for move_pos in dir_positions:
@@ -29,10 +33,12 @@ class RookBehaviour:
     def allowed_takes(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
     ) -> set[Position]:
-        index = -1 if is_white else 1
-        col_row_positions = get_col_row_positions(pos, board.shape)
+        position_lines = [
+            *get_col_row_positions(pos, board.shape),
+            *get_diagonal_positions(pos, board.shape),
+        ]
         filt_all_ts = set()
-        for positions in col_row_positions:
+        for positions in position_lines:
             for dir_positions in positions:
                 dir_positions = sort_by_distance(piece.position, dir_positions)
                 for take_pos in dir_positions:

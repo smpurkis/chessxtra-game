@@ -3,15 +3,33 @@ from Array import Array2D
 from pieces.Piece import Piece, Position
 
 
+class IllegalMove(Exception):
+    pass
+
+
 class Game:
     def __init__(
-        self, shape: tuple[int, int] = (6, 4), setup: str = "rnbk\npppp"
+        self, shape: tuple[int, int] = (6, 4), setup: str = "rnbk\npppp", board_state: str or None = None
     ) -> None:
+        if board_state is not None:
+            shape = (len(board_state.split("\n")), len(board_state.split("\n")[0]))
         self.shape = shape
         self.board = Array2D(shape=shape)
-        self.setup(setup_position=setup)
+        if board_state is None:
+            self.start_setup(setup_position=setup)
+        else:
+            self.setup(board_state=board_state)
 
-    def setup(self, setup_position: str):
+    def setup(self, board_state: str) -> None:
+        setup_lines = board_state.split("\n")
+        for row_no, lines in enumerate(setup_lines):
+            for col_no, piece_code in enumerate(lines):
+                if piece_code == "-":
+                    self.board[row_no][col_no] = "-"
+                else:
+                    self.board[row_no][col_no] = Piece((row_no, col_no), piece_code)
+
+    def start_setup(self, setup_position: str) -> None:
         setup_lines = setup_position.split("\n")
         for piece_code, col_no in zip(setup_lines[0], range(self.board.shape[1])):
             self.board[0][col_no] = Piece((0, col_no), piece_code)
@@ -35,59 +53,39 @@ class Game:
                     legal_moves[piece] = piece.get_legal_moves(self.board)
         return legal_moves
 
-    def get_allowed_moves(self, pos: Position) -> set[Position]:
-        piece: Piece = self.board[pos[1]][pos[0]]
-        allowed_moves = piece.allowed_moves()
-        filt_all_ms = set()
-        for move_pos in allowed_moves:
-            mp_piece = self.board[move_pos[1], move_pos[0]]
-            if isinstance(mp_piece, Piece):
-                if mp_piece.is_white == piece.is_white:
-                    filt_all_ms.add(move_pos)
+    def check_move(self, pos_1: Position, pos_2: Position) -> bool:
+        return self.move(pos_1, pos_2, dry_run=True)
 
-        allowed_takes = piece.allowed_takes()
-        filt_all_ts = set()
-        for take_pos in allowed_takes:
-            tp_piece = self.board[take_pos[1], take_pos[0]]
-            if isinstance(tp_piece, Piece):
-                if tp_piece.is_white == piece.is_white:
-                    filt_all_ts.add(take_pos)
+    def move(self, pos_1: Position, pos_2: Position, dry_run: bool = False) -> bool:
+        piece: Piece = self.board[pos_1[0]][pos_1[1]]
 
-    # def check_move(self, pos_1: Position, pos_2: Position) -> bool:
-    #     return self.move(pos_1, pos_2, dry_run=True)
+        allowed_moves = piece.allowed_moves(self.board)
+        allowed_takes = piece.allowed_takes(self.board)
 
-    # def move(self, pos_1: Position, pos_2: Position, dry_run: bool = False) -> bool:
-    #     piece: Piece = self.board[pos_1[1]][pos_1[0]]
+        if pos_2 not in allowed_moves.union(allowed_takes):
+            raise IllegalMove(f"position 1: {pos_1}, position 2: {pos_2}")
 
-    #     allowed_moves = piece.allowed_moves()
+        if dry_run:
+            return True
 
-    #     take_piece: Piece or None = (
-    #         self.board[pos_2[1]][pos_2[0]]
-    #         if isinstance(self.board[pos_2[1]][pos_2[0]], Piece)
-    #         else None
-    #     )
-    #     if take_piece is not None:
-    #         allowed_takes = piece.allowed_takes(take_piece)
-    #     else:
-    #         allowed_takes = set()
+        self.board[pos_1[0]][pos_1[1]] = "-"
+        self.board[pos_2[0]][pos_2[1]] = piece
+        piece.update_position(pos_2)
 
-    #     print(pos_2, allowed_moves.union(allowed_takes))
-    #     if pos_2 not in allowed_moves.union(allowed_takes):
-    #         return False
-    #     if not dry_run:
-    #         self.board[pos_1[1]][pos_1[0]] = "-"
-    #         self.board[pos_2[1]][pos_2[0]] = piece
-    #         piece.update_position(pos_2)
-    #         if take_piece is not None:
-    #             take_piece.in_play = False
-    #             take_piece.position = (-1, -1)
-    #     return True
+        if pos_2 in allowed_takes:
+            take_piece: Piece = self.board[pos_2[0]][pos_2[1]]
+            take_piece.in_play = False
+            take_piece.update_position((-1, -1))
+
+        return True
 
 
 if __name__ == "__main__":
-    game = Game(setup="rrrr\npppp")
+    game = Game(setup="rrrr\nbrkn")
     print(game.board)
     legal_moves = game.get_all_legal_moves()
     # print(game.board[1][1].get_legal_moves(game.board))
-    # print(game.move((0, 1), (0, 2)))
+    print(game.move((1, 0), (2, 1)))
+    print(game.board)
+    legal_moves = game.get_all_legal_moves()
     print(game.board)
