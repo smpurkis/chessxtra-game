@@ -1,13 +1,15 @@
+from ast import Set, Tuple
 import importlib
+from typing import Dict
 from Array import Array2D, check_position_is_on_board
 
-Position = tuple[int, int]
+Position = Tuple
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 PIECE_CODES_SYMBOL = {}
 
 
-def get_piece_code_dict() -> dict[str, str]:
+def get_piece_code_dict() -> Dict[str, str]:
     piece_code_dict = {}
     for piece_code in PIECE_CODES:
         piece_code_dict[piece_code] = piece_code
@@ -52,10 +54,10 @@ class Piece:
     def __repr__(self) -> str:
         return f"{self.colour.capitalize()} {self.full_symbol.lower().capitalize()} {self.position}"
 
-    def get_legal_moves(self, board: Array2D) -> set[Position]:
+    def get_legal_moves(self, board: Array2D):
         return self.allowed_moves(board).union(self.allowed_takes(board))
 
-    def allowed_moves(self, board: Array2D) -> set[Position]:
+    def allowed_moves(self, board: Array2D):
         pos = self.position
         new_positions = self.behaviour.allowed_moves(self, board, pos, self.is_white)
         new_positions = {
@@ -63,7 +65,7 @@ class Piece:
         }
         return new_positions
 
-    def allowed_takes(self, board: Array2D) -> set[Position]:
+    def allowed_takes(self, board: Array2D):
         pos = self.position
         new_positions = self.behaviour.allowed_takes(self, board, pos, self.is_white)
         new_positions = {

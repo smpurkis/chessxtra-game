@@ -1,3 +1,4 @@
+from typing import Set
 from pieces.Piece import Piece, Position
 from Array import (
     Array2D,
@@ -10,7 +11,7 @@ class RookBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         index = -1 if is_white else 1
         col_row_positions = get_col_row_positions(pos, board.shape)
         filt_all_ms = set()
@@ -28,7 +29,7 @@ class RookBehaviour:
     @staticmethod
     def allowed_takes(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         index = -1 if is_white else 1
         col_row_positions = get_col_row_positions(pos, board.shape)
         filt_all_ts = set()

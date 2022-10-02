@@ -1,6 +1,7 @@
 import random
 from Game import Game
 from tqdm.auto import tqdm
+from time import time
 
 random.seed(1)
 
@@ -27,7 +28,9 @@ def run_random_games(n: int = 1):
     print(outcomes)
             
 def main():
+    s = time()
     run_random_games(10000)
+    print(time() - s)
 
 if __name__ == "__main__":
     main()

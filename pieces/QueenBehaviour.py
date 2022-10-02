@@ -1,4 +1,5 @@
 from turtle import position
+from typing import Set
 from pieces.Piece import Piece, Position
 from Array import (
     Array2D,
@@ -32,7 +33,7 @@ class QueenBehaviour:
     @staticmethod
     def allowed_takes(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         position_lines = [
             *get_col_row_positions(pos, board.shape),
             *get_diagonal_positions(pos, board.shape),

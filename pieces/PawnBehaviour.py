@@ -1,3 +1,4 @@
+from typing import Set
 from pieces.Piece import Piece, Position
 from Array import Array2D, check_position_is_on_board
 
@@ -6,7 +7,7 @@ class PawnBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         index = -1 if is_white else 1
         new_positions = [(pos[0] + index, pos[1])]
         new_positions = {
@@ -22,7 +23,7 @@ class PawnBehaviour:
     @staticmethod
     def allowed_takes(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         index = -1 if is_white else 1
         new_positions = [(pos[0] + index, pos[1] + row_i) for row_i in (-1, 1)]
         new_positions = {

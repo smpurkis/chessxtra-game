@@ -1,3 +1,4 @@
+from typing import Set
 from pieces.Piece import Piece, Position
 from Array import Array2D, get_l_positions
 
@@ -6,7 +7,7 @@ class KnightBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         surrounding_positions = get_l_positions(pos, board.shape)
         filt_all_ms = set()
         for move_pos in surrounding_positions:
@@ -18,7 +19,7 @@ class KnightBehaviour:
     @staticmethod
     def allowed_takes(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         surrounding_positions = get_l_positions(pos, board.shape)
         filt_all_ts = set()
         for take_pos in surrounding_positions:

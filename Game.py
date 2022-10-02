@@ -1,4 +1,5 @@
 from cmath import pi
+from typing import Dict, Set, Tuple
 from Array import Array2D
 from pieces.Piece import Piece, Position
 
@@ -9,7 +10,7 @@ class IllegalMove(Exception):
 
 class Game:
     def __init__(
-        self, shape: tuple[int, int] = (6, 4), setup: str = "rnbk\npppp", board_state: str or None = None
+        self, shape: Tuple[int, int] = (6, 4), setup: str = "rnbk\npppp", board_state: str or None = None
     ) -> None:
         if board_state is not None:
             shape = (len(board_state.split("\n")), len(board_state.split("\n")[0]))
@@ -66,7 +67,7 @@ class Game:
                     (self.board.shape[0] - 2, col_no), piece_code.upper()
                 )
 
-    def get_all_legal_moves(self, colour: str or None = None, include_empty: bool = True) -> dict[Piece, set[Position]]:
+    def get_all_legal_moves(self, colour: str or None = None, include_empty: bool = True) -> Dict[Piece, Set[Position]]:
         legal_moves = {}
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
