@@ -1,4 +1,3 @@
-from turtle import pos
 
 
 class Array2D:
