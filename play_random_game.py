@@ -29,7 +29,7 @@ def run_random_games(n: int = 1):
             
 def main():
     s = time()
-    run_random_games(10000)
+    run_random_games(1000)
     print(time() - s)
 
 if __name__ == "__main__":

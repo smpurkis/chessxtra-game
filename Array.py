@@ -1,8 +1,5 @@
-
-
-from ast import Set
-from typing import List, Tuple
-
+from typing import List, Tuple, Set
+# from Array_opt import check_position_is_on_board, dist
 
 class Array2D:
     def __init__(self, shape: Tuple[int, int] = (6, 4)) -> None:

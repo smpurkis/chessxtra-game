@@ -1,9 +1,8 @@
-from ast import Set, Tuple
 import importlib
-from typing import Dict
+from typing import Dict, Tuple, Set
 from Array import Array2D, check_position_is_on_board
 
-Position = Tuple
+Position = Tuple[int, int]
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 PIECE_CODES_SYMBOL = {}

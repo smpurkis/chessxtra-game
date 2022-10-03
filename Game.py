@@ -79,7 +79,7 @@ class Game:
                             legal_moves[piece] = piece_legal_moves
         return legal_moves
     
-    def get_pieces(self, colour: str or None = None) -> set[Piece]:
+    def get_pieces(self, colour: str or None = None):
         pieces = set()
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
