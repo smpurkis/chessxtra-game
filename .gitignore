@@ -1,3 +1,4 @@
 .vscode/*
 gvpy/*
 __pycache__
+cprofile*

@@ -25,7 +25,7 @@ class Game:
         self.turn = "white"
         
     def check_completed(self) -> None:
-        pieces = set(self.get_all_legal_moves().keys())
+        pieces = self.get_pieces()
         white_pieces = {p for p in pieces if p.is_white}
         black_pieces = {p for p in pieces if not p.is_white}
         white_king_exists = len({p for p in white_pieces if p.full_symbol == "KING"}) == 1
@@ -77,6 +77,17 @@ class Game:
                         if len(piece_legal_moves) > 0 or include_empty:
                             legal_moves[piece] = piece_legal_moves
         return legal_moves
+    
+    def get_pieces(self, colour: str or None = None) -> set[Piece]:
+        pieces = set()
+        for row_no in range(self.board.shape[0]):
+            for col_no in range(self.board.shape[1]):
+                piece: Piece or str = self.board[row_no][col_no]
+                if isinstance(piece, Piece):
+                    if colour is None or piece.colour == colour and piece.in_play:
+                        pieces.add(piece)
+        return pieces
+                    
 
     def check_move(self, pos_1: Position, pos_2: Position) -> bool:
         return self.move(pos_1, pos_2, dry_run=True)

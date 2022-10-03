@@ -27,7 +27,7 @@ def run_random_games(n: int = 1):
     print(outcomes)
             
 def main():
-    run_random_games(10000)
+    run_random_games(1000)
 
 if __name__ == "__main__":
     main()
