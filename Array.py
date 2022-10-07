@@ -1,5 +1,7 @@
-from typing import List, Tuple, Set
-# from Array_opt import check_position_is_on_board, dist
+from typing import List, Tuple, Set, Union
+
+from Array_opt import check_position_is_on_board, dist
+
 
 class Array2D:
     def __init__(self, shape: Tuple[int, int] = (6, 4)) -> None:
@@ -8,7 +10,7 @@ class Array2D:
         for i in range(shape[0]):
             self._data.append(["-" for j in range(shape[1])])
 
-    def __getitem__(self, index: int) -> int:
+    def __getitem__(self, index: int) -> Union[int, list]:
         return self._data[index]
 
     def __str__(self) -> str:
@@ -25,10 +27,14 @@ Position = Tuple[int, int]
 Shape = Tuple[int, int]
 
 
-def check_position_is_on_board(position: Position, board_shape: Shape) -> bool:
-    return (0 <= position[0] <= board_shape[0] - 1) and (
-        0 <= position[1] <= board_shape[1] - 1
-    )
+# def check_position_is_on_board(position: Position, board_shape: Shape) -> bool:
+#     return (0 <= position[0] <= board_shape[0] - 1) and (
+#         0 <= position[1] <= board_shape[1] - 1
+#     )
+#
+#
+# def dist(pos1: Position, pos2: Position) -> float:
+#     return abs(pos1[0] - pos2[0]) - abs(pos1[1] - pos2[1])
 
 
 def filter_positions_off_board(
@@ -104,10 +110,6 @@ def get_surrounding_positions(pos: Position, board_shape: Shape):
 def split_at_position(positions: List[Position], pos: Position) -> List[List[Position]]:
     index = positions.index(pos)
     return [positions[0:index], positions[index + 1 : len(positions)]]
-
-
-def dist(pos1: Position, pos2: Position) -> float:
-    return abs(pos1[0] - pos2[0]) - abs(pos1[1] - pos2[1])
 
 
 def sort_by_distance(pos: Position, positions: List[Position]) -> List[Position]:

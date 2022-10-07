@@ -16,7 +16,26 @@ def convert_moves_to_json(
 
 
 def random_board_state() -> set[str]:
-    piece_codes = ("k", "q", "r", "b", "n", "p", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-")
+    piece_codes = (
+        "k",
+        "q",
+        "r",
+        "b",
+        "n",
+        "p",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+    )
     setup_strings = []
     for _ in range(10):
         setup = []
@@ -44,7 +63,7 @@ def test_check_legal_moves():
     save_path = Path("tests", "data", "board_states_legal_moves.json")
     board_states_legal_moves = json.load(save_path.open())
     for setup_str in board_states_legal_moves.keys():
-        setup_str_dash = setup_str.replace('\n', '-')
+        setup_str_dash = setup_str.replace("\n", "-")
 
         game = Game(board_state=setup_str)
         legal_moves = game.get_all_legal_moves()
@@ -58,6 +77,7 @@ def test_check_legal_moves():
     #     sort_keys=True,
     #     indent=4,
     # )
+
 
 # print(random_board_state())
 test_check_legal_moves()
