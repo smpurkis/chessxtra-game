@@ -38,7 +38,7 @@ Shape = Tuple[int, int]
 
 
 def filter_positions_off_board(
-    positions: List[Position] or Set[Position], board_shape: Shape
+    positions: Union[List[Position], Set[Position]], board_shape: Shape
 ) -> List[Position] or Set[Position]:
     if isinstance(positions, set):
         return {
