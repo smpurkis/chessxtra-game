@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, Union, Any
+from typing import List, Tuple, Set, Union, Any, Optional
 
 from Array_opt import check_position_is_on_board, dist
 
@@ -50,7 +50,7 @@ def filter_positions_off_board_set(
 
 
 def get_col_row_positions(
-    pos: Position, board_shape: Shape, max_range: int | None = None
+    pos: Position, board_shape: Shape, max_range: Optional[int] = None
 ) -> tuple[list[list[Position]], list[list[Position]]]:
     col_range = board_shape[0] if max_range is None else min(board_shape[0], max_range)
     column_positions = split_at_position(
@@ -70,7 +70,7 @@ def get_col_row_positions(
 
 
 def get_diagonal_positions(
-    pos: Position, board_shape: Shape, max_range: int | None = None
+    pos: Position, board_shape: Shape, max_range: Optional[int] = None
 ) -> list[list[list[tuple[int, int]]]]:
     diagonal_positions = []
     for a, b in ((1, 1), (1, -1), (-1, 1), (-1, -1)):

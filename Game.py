@@ -1,4 +1,4 @@
-from typing import Dict, Set, Tuple, Union
+from typing import Dict, Set, Tuple, Union, Optional
 from Array import Array2D
 from pieces.Piece import Piece, Position
 
@@ -9,7 +9,10 @@ class IllegalMove(Exception):
 
 class Game:
     def __init__(
-        self, shape: Tuple[int, int] = (6, 4), setup: str = "rnbk\npppp", board_state: str or None = None
+        self,
+        shape: Tuple[int, int] = (6, 4),
+        setup: str = "rnbk\npppp",
+        board_state: Optional[str] = None,
     ) -> None:
         if board_state is not None:
             shape = (len(board_state.split("\n")), len(board_state.split("\n")[0]))
@@ -71,12 +74,12 @@ class Game:
                 )
 
     def get_all_legal_moves(
-        self, colour: str | None = None, include_empty: bool = True
+        self, colour: Optional[str] = None, include_empty: bool = True
     ) -> dict[Piece, set[Position]]:
         legal_moves = {}
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
-                piece: Piece | str = self.board[row_no][col_no]
+                piece: Union[Piece, str] = self.board[row_no][col_no]
                 if isinstance(piece, Piece):
                     if colour is None or piece.colour == colour and piece.in_play:
                         piece_legal_moves = piece.get_legal_moves(self.board)
@@ -84,11 +87,11 @@ class Game:
                             legal_moves[piece] = piece_legal_moves
         return legal_moves
 
-    def get_pieces(self, colour: str | None = None) -> set[Piece]:
+    def get_pieces(self, colour: Optional[str] = None) -> set[Piece]:
         pieces = set()
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
-                piece: Piece | str = self.board[row_no][col_no]
+                piece: Union[Piece, str] = self.board[row_no][col_no]
                 if isinstance(piece, Piece):
                     if colour is None or piece.colour == colour and piece.in_play:
                         pieces.add(piece)
