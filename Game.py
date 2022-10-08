@@ -1,5 +1,4 @@
-from cmath import pi
-from typing import Dict, Set, Tuple
+from typing import Dict, Set, Tuple, Union
 from Array import Array2D
 from pieces.Piece import Piece, Position
 
@@ -16,21 +15,25 @@ class Game:
             shape = (len(board_state.split("\n")), len(board_state.split("\n")[0]))
         self.shape = shape
         self.board = Array2D(shape=shape)
-        self.moves = []
+        self.moves: list[str] = []
         if board_state is None:
             self.start_setup(setup_position=setup)
         else:
             self.setup(board_state=board_state)
         self.completed = False
-        self.winner = None
+        self.winner = ""
         self.turn = "white"
-        
+
     def check_completed(self) -> None:
         pieces = self.get_pieces()
         white_pieces = {p for p in pieces if p.is_white}
         black_pieces = {p for p in pieces if not p.is_white}
-        white_king_exists = len({p for p in white_pieces if p.full_symbol == "KING"}) == 1
-        black_king_exists = len({p for p in black_pieces if p.full_symbol == "KING"}) == 1
+        white_king_exists = (
+            len({p for p in white_pieces if p.full_symbol == "KING"}) == 1
+        )
+        black_king_exists = (
+            len({p for p in black_pieces if p.full_symbol == "KING"}) == 1
+        )
         if not self.completed:
             if white_king_exists and black_king_exists:
                 self.winner = "neither"
@@ -67,28 +70,29 @@ class Game:
                     (self.board.shape[0] - 2, col_no), piece_code.upper()
                 )
 
-    def get_all_legal_moves(self, colour: str or None = None, include_empty: bool = True) -> Dict[Piece, Set[Position]]:
+    def get_all_legal_moves(
+        self, colour: str | None = None, include_empty: bool = True
+    ) -> dict[Piece, set[Position]]:
         legal_moves = {}
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
-                piece: Piece or str = self.board[row_no][col_no]
+                piece: Piece | str = self.board[row_no][col_no]
                 if isinstance(piece, Piece):
                     if colour is None or piece.colour == colour and piece.in_play:
                         piece_legal_moves = piece.get_legal_moves(self.board)
                         if len(piece_legal_moves) > 0 or include_empty:
                             legal_moves[piece] = piece_legal_moves
         return legal_moves
-    
-    def get_pieces(self, colour: str or None = None):
+
+    def get_pieces(self, colour: str | None = None) -> set[Piece]:
         pieces = set()
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
-                piece: Piece or str = self.board[row_no][col_no]
+                piece: Piece | str = self.board[row_no][col_no]
                 if isinstance(piece, Piece):
                     if colour is None or piece.colour == colour and piece.in_play:
                         pieces.add(piece)
         return pieces
-                    
 
     def check_move(self, pos_1: Position, pos_2: Position) -> bool:
         return self.move(pos_1, pos_2, dry_run=True)
@@ -106,7 +110,7 @@ class Game:
             return True
 
         move = f"{piece.symbol}{pos_1[0]}{pos_1[1]}->"
-        
+
         if pos_2 in allowed_takes:
             take_piece: Piece = self.board[pos_2[0]][pos_2[1]]
             take_piece.in_play = False
@@ -114,11 +118,11 @@ class Game:
             move = f"{move}{take_piece.symbol}{pos_2[0]}{pos_2[1]}"
         else:
             move = f"{move}{pos_2[0]}{pos_2[1]}"
-            
+
         self.board[pos_1[0]][pos_1[1]] = "-"
         self.board[pos_2[0]][pos_2[1]] = piece
         piece.update_position(pos_2)
-        
+
         self.moves.append(move)
         self.turn = "white" if self.turn == "black" else "black"
         self.check_completed()

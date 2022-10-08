@@ -1,12 +1,13 @@
 import random
-from Game import Game
-from tqdm.auto import tqdm
 from time import time
+
+from Game import Game
+from tqdm import tqdm
 
 random.seed(1)
 
 
-def run_random_games(n: int = 1):
+def run_random_games(n: int = 1) -> None:
     outcomes = {"white": 0, "black": 0}
     for _ in tqdm(range(n)):
         game = Game()
@@ -34,9 +35,9 @@ def run_random_games(n: int = 1):
     print(outcomes)
 
 
-def main():
+def main() -> None:
     s = time()
-    run_random_games(500)
+    run_random_games(1000)
     print(time() - s)
 
 
