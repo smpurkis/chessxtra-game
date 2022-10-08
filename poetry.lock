@@ -115,10 +115,18 @@ notebook = ["ipywidgets (>=6)"]
 slack = ["slack-sdk"]
 telegram = ["requests"]
 
+[[package]]
+name = "types-tqdm"
+version = "4.64.7"
+description = "Typing stubs for tqdm"
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "241c9c93bb2f80d9fc6ff2da14ddcf99d7aa094cfb4115f0daf96ce171b8f753"
+content-hash = "955665f5cd9df9b2dd165acd1c2936eac7f7bdf08be22c2c738738e9ed147906"
 
 [metadata.files]
 attrs = [
@@ -160,4 +168,8 @@ tomli = [
 tqdm = [
     {file = "tqdm-4.64.1-py2.py3-none-any.whl", hash = "sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"},
     {file = "tqdm-4.64.1.tar.gz", hash = "sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4"},
+]
+types-tqdm = [
+    {file = "types-tqdm-4.64.7.tar.gz", hash = "sha256:32ccd88feb144667a2aeef0db0069c2183a3836ea996c03509236802b8858227"},
+    {file = "types_tqdm-4.64.7-py3-none-any.whl", hash = "sha256:66ea3e49e07d3343c386823a82885bab5c5bf42ff4fc12ca56effbd7fd62f7dd"},
 ]

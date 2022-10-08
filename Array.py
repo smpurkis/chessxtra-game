@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import Any
 
 
 class Array2D:
@@ -7,7 +10,7 @@ class Array2D:
         for i in range(shape[0]):
             self._data.append(["-" for j in range(shape[1])])
 
-    def __getitem__(self, index: int) -> int:
+    def __getitem__(self, index: int) -> list[Any] | Any:
         return self._data[index]
 
     def __str__(self) -> str:
@@ -30,32 +33,31 @@ def check_position_is_on_board(position: Position, board_shape: Shape) -> bool:
     )
 
 
-def filter_positions_off_board(
-    positions: list[Position] or set[Position], board_shape: Shape
-) -> list[Position] or set[Position]:
-    if isinstance(positions, set):
-        return {
-            pos for pos in positions if check_position_is_on_board(pos, board_shape)
-        }
-    elif isinstance(positions, list):
-        return [
-            pos for pos in positions if check_position_is_on_board(pos, board_shape)
-        ]
+def filter_positions_off_board_list(
+    positions: list[Position], board_shape: Shape
+) -> list[Position]:
+    return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
+
+
+def filter_positions_off_board_set(
+    positions: set[Position], board_shape: Shape
+) -> set[Position]:
+    return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
 
 
 def get_col_row_positions(
-    pos: Position, board_shape: Shape, max_range: int = None
+    pos: Position, board_shape: Shape, max_range: int | None = None
 ) -> tuple[list[list[Position]], list[list[Position]]]:
     col_range = board_shape[0] if max_range is None else min(board_shape[0], max_range)
     column_positions = split_at_position(
-        filter_positions_off_board(
+        filter_positions_off_board_list(
             [(i, pos[1]) for i in range(col_range)], board_shape
         ),
         pos,
     )
     row_range = board_shape[1] if max_range is None else min(board_shape[1], max_range)
     row_positions = split_at_position(
-        filter_positions_off_board(
+        filter_positions_off_board_list(
             [(pos[0], i) for i in range(row_range)], board_shape
         ),
         pos,
@@ -64,8 +66,8 @@ def get_col_row_positions(
 
 
 def get_diagonal_positions(
-    pos: Position, board_shape: Shape, max_range: int = None
-) -> tuple[list[list[Position]], list[list[Position]]]:
+    pos: Position, board_shape: Shape, max_range: int | None = None
+) -> list[list[list[tuple[int, int]]]]:
     diagonal_positions = []
     for a, b in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
         highest_board_shape = max(*board_shape)
@@ -75,7 +77,7 @@ def get_diagonal_positions(
             else min(highest_board_shape, max_range)
         )
         positions = split_at_position(
-            filter_positions_off_board(
+            filter_positions_off_board_list(
                 [(pos[0] + i * a, pos[1] + i * b) for i in range(diagonal_range)],
                 board_shape,
             ),
@@ -87,14 +89,14 @@ def get_diagonal_positions(
 
 def get_l_positions(pos: Position, board_shape: Shape) -> set[Position]:
     l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
-    positions = filter_positions_off_board(
+    positions = filter_positions_off_board_set(
         {(pos[0] + i, pos[1] + j) for i, j in l_offsets}, board_shape
     )
     return positions
 
 
 def get_surrounding_positions(pos: Position, board_shape: Shape) -> set[Position]:
-    positions = filter_positions_off_board(
+    positions = filter_positions_off_board_set(
         {(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}, board_shape
     )
     return positions
@@ -113,11 +115,3 @@ def sort_by_distance(pos: Position, positions: list[Position]) -> list[Position]
     position_distances = sorted([(dist(pos, p), p) for p in positions])
     distances = [p[1] for p in position_distances]
     return distances
-
-
-if __name__ == "__main__":
-    a = Array2D()
-    print(a[0])
-    print(a)
-    a[0][1] = "1"
-    print(a)

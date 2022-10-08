@@ -4,7 +4,6 @@ from Array import Array2D, check_position_is_on_board
 Position = tuple[int, int]
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
-PIECE_CODES_SYMBOL = {}
 
 
 def get_piece_code_dict() -> dict[str, str]:
@@ -57,7 +56,9 @@ class Piece:
 
     def allowed_moves(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_moves(self, board, pos, self.is_white)
+        new_positions: set[Position] = self.behaviour.allowed_moves(
+            self, board, pos, self.is_white
+        )
         new_positions = {
             p for p in new_positions if check_position_is_on_board(p, board.shape)
         }
@@ -65,18 +66,13 @@ class Piece:
 
     def allowed_takes(self, board: Array2D) -> set[Position]:
         pos = self.position
-        new_positions = self.behaviour.allowed_takes(self, board, pos, self.is_white)
+        new_positions: set[Position] = self.behaviour.allowed_takes(
+            self, board, pos, self.is_white
+        )
         new_positions = {
             p for p in new_positions if check_position_is_on_board(p, board.shape)
         }
         return new_positions
 
-    def update_position(self, position: Position):
+    def update_position(self, position: Position) -> None:
         self.position = position
-
-
-if __name__ == "__main__":
-    p = Piece(position=(0, 4), symbol="P")
-    print(p)
-    print(p.allowed_moves())
-    print(p.allowed_takes())
