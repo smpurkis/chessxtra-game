@@ -75,7 +75,7 @@ class Game:
 
     def get_all_legal_moves(
         self, colour: Optional[str] = None, include_empty: bool = True
-    ) -> dict[Piece, set[Position]]:
+    ) -> Dict[Piece, Set[Position]]:
         legal_moves = {}
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):
@@ -87,7 +87,7 @@ class Game:
                             legal_moves[piece] = piece_legal_moves
         return legal_moves
 
-    def get_pieces(self, colour: Optional[str] = None) -> set[Piece]:
+    def get_pieces(self, colour: Optional[str] = None) -> Set[Piece]:
         pieces = set()
         for row_no in range(self.board.shape[0]):
             for col_no in range(self.board.shape[1]):

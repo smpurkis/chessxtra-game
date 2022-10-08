@@ -38,20 +38,20 @@ Shape = Tuple[int, int]
 
 
 def filter_positions_off_board_list(
-    positions: list[Position], board_shape: Shape
-) -> list[Position]:
+    positions: List[Position], board_shape: Shape
+) -> List[Position]:
     return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
 
 
 def filter_positions_off_board_set(
-    positions: set[Position], board_shape: Shape
-) -> set[Position]:
+    positions: Set[Position], board_shape: Shape
+) -> Set[Position]:
     return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
 
 
 def get_col_row_positions(
     pos: Position, board_shape: Shape, max_range: Optional[int] = None
-) -> tuple[list[list[Position]], list[list[Position]]]:
+) -> Tuple[List[List[Position]], List[List[Position]]]:
     col_range = board_shape[0] if max_range is None else min(board_shape[0], max_range)
     column_positions = split_at_position(
         filter_positions_off_board_list(
@@ -71,7 +71,7 @@ def get_col_row_positions(
 
 def get_diagonal_positions(
     pos: Position, board_shape: Shape, max_range: Optional[int] = None
-) -> list[list[list[tuple[int, int]]]]:
+) -> List[List[List[Tuple[int, int]]]]:
     diagonal_positions = []
     for a, b in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
         highest_board_shape = max(*board_shape)
@@ -99,7 +99,7 @@ def get_l_positions(pos: Position, board_shape: Shape):
     return positions
 
 
-def get_surrounding_positions(pos: Position, board_shape: Shape) -> set[Position]:
+def get_surrounding_positions(pos: Position, board_shape: Shape) -> Set[Position]:
     positions = filter_positions_off_board_set(
         {(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}, board_shape
     )
