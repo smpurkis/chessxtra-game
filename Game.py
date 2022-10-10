@@ -1,5 +1,8 @@
 from typing import Dict, Set, Tuple, Union, Optional
+
 from Array import Array2D
+
+# import numpy as np
 from pieces.Piece import Piece, Position
 
 
@@ -18,6 +21,7 @@ class Game:
             shape = (len(board_state.split("\n")), len(board_state.split("\n")[0]))
         self.shape = shape
         self.board = Array2D(shape=shape)
+        # self.board = np.full(shape=shape, fill_value="-", dtype=object)
         self.moves: list[str] = []
         if board_state is None:
             self.start_setup(setup_position=setup)
@@ -73,6 +77,7 @@ class Game:
                     (self.board.shape[0] - 2, col_no), piece_code.upper()
                 )
 
+    # @profile
     def get_all_legal_moves(
         self, colour: Optional[str] = None, include_empty: bool = True
     ) -> Dict[Piece, Set[Position]]:
@@ -100,6 +105,7 @@ class Game:
     def check_move(self, pos_1: Position, pos_2: Position) -> bool:
         return self.move(pos_1, pos_2, dry_run=True)
 
+    # @profile
     def move(self, pos_1: Position, pos_2: Position, dry_run: bool = False) -> bool:
         piece: Piece = self.board[pos_1[0]][pos_1[1]]
 

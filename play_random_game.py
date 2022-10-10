@@ -7,13 +7,13 @@ from tqdm import tqdm
 random.seed(1)
 
 
+# @profile
 def run_random_games(n: int = 1) -> None:
     outcomes = {"white": 0, "black": 0}
     for _ in tqdm(range(n)):
         game = Game()
         # print(game.board)
         while not game.completed:
-            legal_moves = None
             if game.turn == "white":
                 legal_moves = game.get_all_legal_moves(
                     colour="white", include_empty=False
@@ -37,7 +37,7 @@ def run_random_games(n: int = 1) -> None:
 
 def main() -> None:
     s = time()
-    run_random_games(10000)
+    run_random_games(100)
     print(time() - s)
 
 

@@ -52,12 +52,13 @@ class Piece:
     def __repr__(self) -> str:
         return f"{self.colour.capitalize()} {self.full_symbol.lower().capitalize()} {self.position}"
 
-    def get_legal_moves(self, board: Array2D):
+    def get_legal_moves(self, board: Array2D) -> Set[Position]:
         return self.allowed_moves(board).union(self.allowed_takes(board))
 
-    def allowed_moves(self, board: Array2D):
+    # @profile
+    def allowed_moves(self, board: Array2D) -> Set[Position]:
         pos = self.position
-        new_positions: set[Position] = self.behaviour.allowed_moves(
+        new_positions: Set[Position] = self.behaviour.allowed_moves(
             self, board, pos, self.is_white
         )
         new_positions = {
@@ -65,9 +66,10 @@ class Piece:
         }
         return new_positions
 
-    def allowed_takes(self, board: Array2D):
+    # @profile
+    def allowed_takes(self, board: Array2D) -> Set[Position]:
         pos = self.position
-        new_positions: set[Position] = self.behaviour.allowed_takes(
+        new_positions: Set[Position] = self.behaviour.allowed_takes(
             self, board, pos, self.is_white
         )
         new_positions = {
