@@ -7,8 +7,9 @@ Position = Tuple[int, int]
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
 
-def get_piece_code_dict() -> Dict[str, str]:
+def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
     piece_code_dict = {}
+    inverse_piece_code_dict = {}
     for piece_code in PIECE_CODES:
         piece_code_dict[piece_code] = piece_code
         piece_code_dict[piece_code.lower()] = piece_code
@@ -17,10 +18,17 @@ def get_piece_code_dict() -> Dict[str, str]:
             index += 1
         piece_code_dict[piece_code[index]] = piece_code
         piece_code_dict[piece_code[index].lower()] = piece_code
-    return piece_code_dict
+
+        inverse_piece_code_dict[piece_code] = {
+            piece_code,
+            piece_code.lower(),
+            piece_code[index],
+            piece_code[index].lower(),
+        }
+    return piece_code_dict, inverse_piece_code_dict
 
 
-PIECE_CODE_DICT = get_piece_code_dict()
+PIECE_CODE_DICT, INVERSE_PIECE_CODE_DICT = get_piece_code_dict()
 ALLOWED_PIECE_CODES = PIECE_CODE_DICT.keys()
 
 
