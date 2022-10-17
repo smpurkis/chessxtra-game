@@ -8,7 +8,7 @@ class Array2D:
         self.shape = shape
         self._data = []
         for i in range(shape[0]):
-            self._data.append(["-" for j in range(shape[1])])
+            self._data.append(["-" for _ in range(shape[1])])
 
     def __getitem__(self, index: int) -> Union[List[Any], Any]:
         return self._data[index]

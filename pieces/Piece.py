@@ -1,8 +1,15 @@
-import importlib
 from typing import Dict, Tuple, Set
 from Array import Array2D, check_position_is_on_board
+from custom_types import Piece, Position
+from pieces import (
+    KingBehaviour,
+    QueenBehaviour,
+    RookBehaviour,
+    BishopBehaviour,
+    KnightBehaviour,
+    PawnBehaviour,
+)
 
-Position = Tuple[int, int]
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
@@ -36,54 +43,72 @@ class PieceNotAllowed(Exception):
     pass
 
 
-class Piece:
-    def __init__(self, position: Position, symbol: str) -> None:
-        self.position = position
-        if symbol not in ALLOWED_PIECE_CODES:
-            raise PieceNotAllowed(
-                f"Piece '{symbol}' not allowed, please choose from {ALLOWED_PIECE_CODES}"
-            )
-        self.symbol = symbol
-        self.full_symbol = PIECE_CODE_DICT[self.symbol]
-        self.is_white = symbol.isupper()
-        self.colour = "white" if self.is_white else "black"
-        self.in_play = True
-        self.has_moved = False
-        behaviour_import = f"{self.full_symbol.lower().capitalize()}Behaviour"
-        self.behaviour = getattr(
-            importlib.import_module(f"pieces.{behaviour_import}"), behaviour_import
-        )
+def make_piece(position: Position, symbol: str) -> Piece:
+    return Piece(
+        position=position,
+        symbol=symbol,
+        full_symbol=PIECE_CODE_DICT[symbol],
+        is_white=symbol.isupper(),
+        colour="white" if symbol.isupper() else "black",
+        in_play=True,
+        has_moved=False,
+    )
 
-    def __str__(self) -> str:
-        return self.symbol
 
-    def __repr__(self) -> str:
-        return f"{self.colour.capitalize()} {self.full_symbol.lower().capitalize()} {self.position}"
+def allowed_moves(
+    piece: Piece, board: Array2D, pos: Position, is_white: bool
+) -> Set[Position]:
+    full_symbol = piece.full_symbol
+    if full_symbol == "KING":
+        return KingBehaviour.allowed_moves(piece, board, pos, is_white)
+    elif full_symbol == "QUEEN":
+        return QueenBehaviour.allowed_moves(piece, board, pos, is_white)
+    elif full_symbol == "ROOK":
+        return RookBehaviour.allowed_moves(piece, board, pos, is_white)
+    elif full_symbol == "BISHOP":
+        return BishopBehaviour.allowed_moves(piece, board, pos, is_white)
+    elif full_symbol == "KNIGHT":
+        return KnightBehaviour.allowed_moves(piece, board, pos, is_white)
+    elif full_symbol == "PAWN":
+        return PawnBehaviour.allowed_moves(piece, board, pos, is_white)
 
-    def get_legal_moves(self, board: Array2D) -> Set[Position]:
-        return self.allowed_moves(board).union(self.allowed_takes(board))
 
-    # @profile
-    def allowed_moves(self, board: Array2D) -> Set[Position]:
-        pos = self.position
-        new_positions: Set[Position] = self.behaviour.allowed_moves(
-            self, board, pos, self.is_white
-        )
-        new_positions = {
-            p for p in new_positions if check_position_is_on_board(p, board.shape)
-        }
-        return new_positions
+def get_allowed_moves(piece: Piece, board: Array2D) -> Set[Position]:
+    pos = piece.position
+    new_positions: Set[Position] = allowed_moves(piece, board, pos, piece.is_white)
+    new_positions = {
+        p for p in new_positions if check_position_is_on_board(p, board.shape)
+    }
+    return new_positions
 
-    # @profile
-    def allowed_takes(self, board: Array2D) -> Set[Position]:
-        pos = self.position
-        new_positions: Set[Position] = self.behaviour.allowed_takes(
-            self, board, pos, self.is_white
-        )
-        new_positions = {
-            p for p in new_positions if check_position_is_on_board(p, board.shape)
-        }
-        return new_positions
 
-    def update_position(self, position: Position) -> None:
-        self.position = position
+def allowed_takes(
+    piece: Piece, board: Array2D, pos: Position, is_white: bool
+) -> Set[Position]:
+    full_symbol = piece.full_symbol
+    if full_symbol == "KING":
+        return KingBehaviour.allowed_takes(piece, board, pos, is_white)
+    elif full_symbol == "QUEEN":
+        return QueenBehaviour.allowed_takes(piece, board, pos, is_white)
+    elif full_symbol == "ROOK":
+        return RookBehaviour.allowed_takes(piece, board, pos, is_white)
+    elif full_symbol == "BISHOP":
+        return BishopBehaviour.allowed_takes(piece, board, pos, is_white)
+    elif full_symbol == "KNIGHT":
+        return KnightBehaviour.allowed_takes(piece, board, pos, is_white)
+    elif full_symbol == "PAWN":
+        return PawnBehaviour.allowed_takes(piece, board, pos, is_white)
+
+
+# @profile
+def get_allowed_takes(piece: Piece, board: Array2D) -> Set[Position]:
+    pos = piece.position
+    new_positions: Set[Position] = allowed_takes(piece, board, pos, piece.is_white)
+    new_positions = {
+        p for p in new_positions if check_position_is_on_board(p, board.shape)
+    }
+    return new_positions
+
+
+def get_legal_moves(piece: Piece, board: Array2D) -> Set[Position]:
+    return get_allowed_moves(piece, board).union(get_allowed_takes(piece, board))
