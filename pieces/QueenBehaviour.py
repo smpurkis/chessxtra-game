@@ -1,11 +1,8 @@
 from typing import Set
+
+from Array import (Array2D, get_col_row_positions, get_diagonal_positions,
+                   sort_by_distance)
 from pieces.Piece import Piece, Position
-from Array import (
-    Array2D,
-    sort_by_distance,
-    get_col_row_positions,
-    get_diagonal_positions,
-)
 
 
 def allowed_moves(

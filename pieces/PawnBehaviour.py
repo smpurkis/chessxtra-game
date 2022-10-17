@@ -1,6 +1,7 @@
 from typing import Set
-from pieces.Piece import Piece, Position
+
 from Array import Array2D, check_position_is_on_board
+from pieces.Piece import Piece, Position
 
 
 def allowed_moves(

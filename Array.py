@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, Union, Any, Optional
+from typing import Any, List, Optional, Set, Tuple, Union
 
 # from Array_opt import check_position_is_on_board, dist
 

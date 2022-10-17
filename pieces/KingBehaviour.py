@@ -1,6 +1,7 @@
 from typing import Set
-from pieces.Piece import Piece, Position
+
 from Array import Array2D, get_surrounding_positions
+from pieces.Piece import Piece, Position
 
 
 def allowed_moves(

@@ -1,9 +1,10 @@
-from Game import Game
 import json
-from pathlib import Path
-from Array import Position
-from pieces.Piece import Piece, ALLOWED_PIECE_CODES
 import random
+from pathlib import Path
+
+from Array import Position
+from Game import Game
+from pieces.Piece import ALLOWED_PIECE_CODES, Piece
 
 
 def convert_moves_to_json(

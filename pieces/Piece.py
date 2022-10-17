@@ -1,15 +1,9 @@
-from typing import Dict, Tuple, Set
+from typing import Dict, Set, Tuple
+
 from Array import Array2D, check_position_is_on_board
 from custom_types import Piece, Position
-from pieces import (
-    KingBehaviour,
-    QueenBehaviour,
-    RookBehaviour,
-    BishopBehaviour,
-    KnightBehaviour,
-    PawnBehaviour,
-)
-
+from pieces import (BishopBehaviour, KingBehaviour, KnightBehaviour,
+                    PawnBehaviour, QueenBehaviour, RookBehaviour)
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
