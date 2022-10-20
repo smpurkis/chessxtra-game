@@ -2,3 +2,5 @@
 gvpy/*
 __pycache__
 cprofile*
+.idea/
+build/

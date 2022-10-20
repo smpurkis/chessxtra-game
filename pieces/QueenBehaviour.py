@@ -13,7 +13,7 @@ class QueenBehaviour:
     @staticmethod
     def allowed_moves(
         piece: Piece, board: Array2D, pos: Position, is_white: bool
-    ) -> set[Position]:
+    ) -> Set[Position]:
         position_lines = [
             *get_col_row_positions(pos, board.shape),
             *get_diagonal_positions(pos, board.shape),

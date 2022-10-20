@@ -1,4 +1,4 @@
-from typing import Dict, Set, Tuple, Union, Optional
+from typing import Dict, List, Set, Tuple, Union, Optional
 
 from Array import Array2D
 
@@ -22,7 +22,7 @@ class Game:
         self.shape = shape
         self.board = Array2D(shape=shape)
         # self.board = np.full(shape=shape, fill_value="-", dtype=object)
-        self.moves: list[str] = []
+        self.moves: List[str] = []
         if board_state is None:
             self.start_setup(setup_position=setup)
         else:
