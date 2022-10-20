@@ -1,26 +1,28 @@
 from typing import Any, List, Optional, Set, Tuple, Union
-
+import numpy as np
 # from Array_opt import check_position_is_on_board, dist
 
 
-class Array2D:
-    def __init__(self, shape: Tuple[int, int] = (6, 4)) -> None:
-        self.shape = shape
-        self._data = []
-        for i in range(shape[0]):
-            self._data.append(["-" for _ in range(shape[1])])
+# class Array2D:
+#     def __init__(self, shape: Tuple[int, int] = (6, 4)) -> None:
+#         self.shape = shape
+#         self._data = []
+#         for i in range(shape[0]):
+#             self._data.append(["-" for _ in range(shape[1])])
 
-    def __getitem__(self, index: int) -> Union[List[Any], Any]:
-        return self._data[index]
+#     def __getitem__(self, index: int) -> Union[List[Any], Any]:
+#         return self._data[index]
 
-    def __str__(self) -> str:
-        repr_list = []
-        for row in self._data:
-            repr_row = []
-            for el in row:
-                repr_row.append(el)
-            repr_list.append(" ".join(map(str, repr_row)))
-        return "\n".join(repr_list)
+#     def __str__(self) -> str:
+#         repr_list = []
+#         for row in self._data:
+#             repr_row = []
+#             for el in row:
+#                 repr_row.append(el)
+#             repr_list.append(" ".join(map(str, repr_row)))
+#         return "\n".join(repr_list)
+
+Array2D = np.ndarray
 
 
 Position = Tuple[int, int]
