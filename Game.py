@@ -4,10 +4,10 @@ from typing import Dict, Optional, Set, Tuple, Union, List
 from Array import Array2D
 import numpy as np
 
+from custom_types import Piece, Position
+
 # import numpy as np
 from pieces.Piece import (
-    Piece,
-    Position,
     get_allowed_moves,
     get_allowed_takes,
     get_legal_moves,

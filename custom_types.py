@@ -1,12 +1,10 @@
 from dataclasses import dataclass
-from typing import Tuple
 
-Position = Tuple[int, int]
+Position = tuple
 
-
-@dataclass(unsafe_hash=True)
+@dataclass
 class Piece:
-    position: Position
+    position: tuple
     symbol: str
     full_symbol: str
     is_white: bool

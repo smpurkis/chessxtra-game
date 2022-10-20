@@ -1,3 +1,4 @@
+cimport cython
 import numpy as np
 
 Array2D = np.ndarray

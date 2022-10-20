@@ -1,7 +1,7 @@
 from typing import Set
 
 from Array import Array2D, get_l_positions
-from pieces.Piece import Piece, Position
+from custom_types import Piece, Position
 
 
 def allowed_moves(

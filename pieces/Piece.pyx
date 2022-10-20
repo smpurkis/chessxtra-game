@@ -1,14 +1,17 @@
-from typing import Dict, Set, Tuple
+cimport cython
 
-from Array import Array2D, check_position_is_on_board
-from custom_types import Piece, Position
+from Array import check_position_is_on_board
+import numpy as np
+cimport numpy as np
+from custom_types cimport Piece
 from pieces import (BishopBehaviour, KingBehaviour, KnightBehaviour,
                     PawnBehaviour, QueenBehaviour, RookBehaviour)
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
+Position = tuple
 
-def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
+cpdef tuple get_piece_code_dict():
     piece_code_dict = {}
     inverse_piece_code_dict = {}
     for piece_code in PIECE_CODES:
@@ -37,7 +40,7 @@ class PieceNotAllowed(Exception):
     pass
 
 
-def make_piece(position: Position, symbol: str) -> Piece:
+cpdef Piece make_piece(tuple position, str symbol):
     return Piece(
         position=position,
         symbol=symbol,
@@ -49,9 +52,9 @@ def make_piece(position: Position, symbol: str) -> Piece:
     )
 
 
-def allowed_moves(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> Set[Position]:
+cpdef set allowed_moves(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
         allowed_moves_set = KingBehaviour.allowed_moves(piece, board, pos, is_white)
@@ -70,18 +73,19 @@ def allowed_moves(
     return allowed_moves_set
 
 
-def get_allowed_moves(piece: Piece, board: Array2D) -> Set[Position]:
+cpdef set get_allowed_moves(Piece piece, np.ndarray board):
     pos = piece.position
-    new_positions: Set[Position] = allowed_moves(piece, board, pos, piece.is_white)
+    new_positions = allowed_moves(piece, board, pos, piece.is_white)
+    cdef tuple shape = (board.shape[0], board.shape[1])
     new_positions = {
-        p for p in new_positions if check_position_is_on_board(p, board.shape)
+        p for p in new_positions if check_position_is_on_board(p, shape)
     }
     return new_positions
 
 
-def allowed_takes(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> Set[Position]:
+cpdef allowed_takes(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
         allowed_takes_set = KingBehaviour.allowed_takes(piece, board, pos, is_white)
@@ -101,14 +105,15 @@ def allowed_takes(
 
 
 # @profile
-def get_allowed_takes(piece: Piece, board: Array2D) -> Set[Position]:
+cpdef set get_allowed_takes(Piece piece, np.ndarray board):
     pos = piece.position
-    new_positions: Set[Position] = allowed_takes(piece, board, pos, piece.is_white)
+    new_positions = allowed_takes(piece, board, pos, piece.is_white)
+    cdef tuple shape = (board.shape[0], board.shape[1])
     new_positions = {
-        p for p in new_positions if check_position_is_on_board(p, board.shape)
+        p for p in new_positions if check_position_is_on_board(p, shape)
     }
     return new_positions
 
 
-def get_legal_moves(piece: Piece, board: Array2D) -> Set[Position]:
+cpdef set get_legal_moves(Piece piece, np.ndarray board):
     return get_allowed_moves(piece, board).union(get_allowed_takes(piece, board))
