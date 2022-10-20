@@ -36,7 +36,7 @@ cpdef tuple get_col_row_positions(
         ),
         pos,
     )
-    row_range = board_shape[1] if max_range is None else min(board_shape[1], max_range)
+    row_range = board_shape[1] if max_range == 0 else min(board_shape[1], max_range)
     row_positions = split_at_position(
         filter_positions_off_board_list(
             [(pos[0], i) for i in range(row_range)], board_shape

@@ -4,6 +4,7 @@ from Array import check_position_is_on_board
 import numpy as np
 cimport numpy as np
 from custom_types cimport Piece
+from custom_types import Piece
 from pieces import (BishopBehaviour, KingBehaviour, KnightBehaviour,
                     PawnBehaviour, QueenBehaviour, RookBehaviour)
 
@@ -41,15 +42,16 @@ class PieceNotAllowed(Exception):
 
 
 cpdef Piece make_piece(tuple position, str symbol):
-    return Piece(
+    piece = Piece(
         position=position,
         symbol=symbol,
         full_symbol=PIECE_CODE_DICT[symbol],
         is_white=symbol.isupper(),
         colour="white" if symbol.isupper() else "black",
         in_play=True,
-        has_moved=False,
+        has_moved=False
     )
+    return piece
 
 
 cpdef set allowed_moves(

@@ -23,7 +23,6 @@ def run_random_games(n: int = 1) -> None:
                 legal_moves = get_all_legal_moves(
                     game=game, colour="black", include_empty=False
                 )
-
             chosen_piece = random.choice(list(legal_moves.keys()))
             chosen_move = random.choice(list(legal_moves[chosen_piece]))
 
