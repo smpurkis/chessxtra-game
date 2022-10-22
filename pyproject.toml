@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["Sam Purkis <Sam.Purkis@hotmail.co.uk>"]
 readme = "README.md"
-packages = [{include = "chessxtra_game"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
