@@ -1,6 +1,6 @@
 # from Array_opt import check_position_is_on_board, dist
 from functools import wraps
-from typing import Any, List, Optional, Set, Tuple, Union
+from typing import Any, List, Optional, Set, Tuple, Union, Dict
 
 
 class Array2D:
@@ -23,7 +23,7 @@ class Array2D:
         return "\n".join(repr_list)
 
 
-CACHE_DICT = {}
+CACHE_DICT: Dict[str, Any] = {}
 
 
 def cache(func):
