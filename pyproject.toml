@@ -14,6 +14,7 @@ mypy = "^0.982"
 types-tqdm = "^4.64.7"
 numpy = "^1.23.3"
 Cython = "3.0a11"
+line-profiler = "^3.5.1"
 
 
 [build-system]

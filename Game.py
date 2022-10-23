@@ -30,6 +30,7 @@ class Game:
     board_state: Optional[str]
 
 
+# @profile
 def initialize_game(
     shape: Tuple[int, int] = (6, 4),
     setup: str = "rnbk\npppp",
@@ -55,6 +56,7 @@ def initialize_game(
     return game
 
 
+# @profile
 def check_completed(game: Game) -> None:
     pieces = get_pieces(game=game)
     white_pieces = {p for p in pieces if p.is_white}
@@ -74,6 +76,7 @@ def check_completed(game: Game) -> None:
         raise Exception("should not get here")
 
 
+# @profile
 def setup_position(game: Game, board_state: str) -> Game:
     setup_lines = board_state.split("\n")
     for row_no, lines in enumerate(setup_lines):
@@ -85,6 +88,7 @@ def setup_position(game: Game, board_state: str) -> Game:
     return game
 
 
+# @profile
 def start_setup(game: Game, setup_position: str) -> Game:
     setup_lines = setup_position.split("\n")
     for piece_code, col_no in zip(setup_lines[0], range(game.board.shape[1])):
@@ -118,6 +122,7 @@ def get_all_legal_moves(
     return legal_moves
 
 
+# @profile
 def get_pieces(game: Game, colour: Optional[str] = None) -> Set[Piece]:
     pieces = set()
     for row_no in range(game.board.shape[0]):
@@ -129,6 +134,7 @@ def get_pieces(game: Game, colour: Optional[str] = None) -> Set[Piece]:
     return pieces
 
 
+# @profile
 def check_move(game: Game, pos_1: Position, pos_2: Position) -> bool:
     return move(game=game, pos_1=pos_1, pos_2=pos_2, dry_run=True)
 

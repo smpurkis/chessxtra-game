@@ -4,6 +4,7 @@ from Array import Array2D, get_diagonal_positions, sort_by_distance
 from pieces.Piece import Piece, Position
 
 
+# @profile
 def allowed_moves(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
 ) -> Set[Position]:
@@ -21,6 +22,7 @@ def allowed_moves(
     return filt_all_ms
 
 
+# @profile
 def allowed_takes(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
 ) -> Set[Position]:

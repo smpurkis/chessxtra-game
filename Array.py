@@ -1,6 +1,6 @@
-from typing import Any, List, Optional, Set, Tuple, Union
-
 # from Array_opt import check_position_is_on_board, dist
+from functools import wraps
+from typing import Any, List, Optional, Set, Tuple, Union
 
 
 class Array2D:
@@ -23,32 +23,71 @@ class Array2D:
         return "\n".join(repr_list)
 
 
+CACHE_DICT = {}
+
+
+def cache(func):
+    @wraps(func)
+    def wrapper_decorator(*args, **kwargs):
+        if len(kwargs) == 0:
+            key = (func, args)
+        else:
+            key = (func, args, kwargs)
+        if any(
+            [
+                isinstance(a, dict) or isinstance(a, list) or isinstance(a, set)
+                for a in args
+            ]
+        ):
+            key = str(key)
+        if key in CACHE_DICT:
+            value = CACHE_DICT[key]
+        else:
+            value = func(*args, **kwargs)
+            CACHE_DICT[key] = value
+        return value
+
+    return wrapper_decorator
+
+
 Position = Tuple[int, int]
 Shape = Tuple[int, int]
 
 
+# @profile
 def check_position_is_on_board(position: Position, board_shape: Shape) -> bool:
     return (0 <= position[0] <= board_shape[0] - 1) and (
         0 <= position[1] <= board_shape[1] - 1
     )
 
 
+# @profile
 def dist(pos1: Position, pos2: Position) -> float:
     return abs(pos1[0] - pos2[0]) - abs(pos1[1] - pos2[1])
 
 
+# @profile
 def filter_positions_off_board_list(
     positions: List[Position], board_shape: Shape
 ) -> List[Position]:
-    return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
+    filtered_positions = []
+    for pos in positions:
+        if check_position_is_on_board(pos, board_shape):
+            filtered_positions.append(pos)
+    return filtered_positions
+    # return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
 
 
+# @profile
 def filter_positions_off_board_set(
     positions: Set[Position], board_shape: Shape
 ) -> Set[Position]:
     return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
 
 
+# @profile
+
+# @cache
 def get_col_row_positions(
     pos: Position, board_shape: Shape, max_range: Optional[int] = None
 ) -> Tuple[List[List[Position]], List[List[Position]]]:
@@ -69,6 +108,10 @@ def get_col_row_positions(
     return column_positions, row_positions
 
 
+# @profile
+
+
+@cache
 def get_diagonal_positions(
     pos: Position, board_shape: Shape, max_range: Optional[int] = None
 ) -> List[List[List[Tuple[int, int]]]]:
@@ -91,6 +134,9 @@ def get_diagonal_positions(
     return diagonal_positions
 
 
+# @profile
+
+# @cache
 def get_l_positions(pos: Position, board_shape: Shape) -> Set[Position]:
     l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
     positions = filter_positions_off_board_set(
@@ -99,6 +145,9 @@ def get_l_positions(pos: Position, board_shape: Shape) -> Set[Position]:
     return positions
 
 
+# @profile
+
+# @cache
 def get_surrounding_positions(pos: Position, board_shape: Shape) -> Set[Position]:
     positions = filter_positions_off_board_set(
         {(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}, board_shape
@@ -106,11 +155,17 @@ def get_surrounding_positions(pos: Position, board_shape: Shape) -> Set[Position
     return positions
 
 
+# @profile
+
+# @cache
 def split_at_position(positions: List[Position], pos: Position) -> List[List[Position]]:
     index = positions.index(pos)
     return [positions[0:index], positions[index + 1 : len(positions)]]
 
 
+# @profile
+
+# @cache
 def sort_by_distance(pos: Position, positions: List[Position]) -> List[Position]:
     position_distances = sorted([(dist(pos, p), p) for p in positions])
     distances = [p[1] for p in position_distances]

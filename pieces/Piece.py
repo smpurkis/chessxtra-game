@@ -2,12 +2,19 @@ from typing import Dict, Set, Tuple
 
 from Array import Array2D, check_position_is_on_board
 from custom_types import Piece, Position
-from pieces import (BishopBehaviour, KingBehaviour, KnightBehaviour,
-                    PawnBehaviour, QueenBehaviour, RookBehaviour)
+from pieces import (
+    BishopBehaviour,
+    KingBehaviour,
+    KnightBehaviour,
+    PawnBehaviour,
+    QueenBehaviour,
+    RookBehaviour,
+)
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
 
+# @profile
 def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
     piece_code_dict = {}
     inverse_piece_code_dict = {}
@@ -37,6 +44,7 @@ class PieceNotAllowed(Exception):
     pass
 
 
+# @profile
 def make_piece(position: Position, symbol: str) -> Piece:
     return Piece(
         position=position,
@@ -49,6 +57,7 @@ def make_piece(position: Position, symbol: str) -> Piece:
     )
 
 
+# @profile
 def allowed_moves(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
 ) -> Set[Position]:
@@ -70,6 +79,7 @@ def allowed_moves(
     return allowed_moves_set
 
 
+# @profile
 def get_allowed_moves(piece: Piece, board: Array2D) -> Set[Position]:
     pos = piece.position
     new_positions: Set[Position] = allowed_moves(piece, board, pos, piece.is_white)
@@ -79,6 +89,7 @@ def get_allowed_moves(piece: Piece, board: Array2D) -> Set[Position]:
     return new_positions
 
 
+# @profile
 def allowed_takes(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
 ) -> Set[Position]:
@@ -110,5 +121,6 @@ def get_allowed_takes(piece: Piece, board: Array2D) -> Set[Position]:
     return new_positions
 
 
+# @profile
 def get_legal_moves(piece: Piece, board: Array2D) -> Set[Position]:
     return get_allowed_moves(piece, board).union(get_allowed_takes(piece, board))
