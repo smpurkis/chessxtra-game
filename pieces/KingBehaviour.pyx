@@ -1,14 +1,18 @@
 from typing import List
 
 from Array import Array2D, get_surrounding_positions
-from custom_types import Piece, Position
+import numpy as np
+cimport numpy as np
+from custom_types cimport Piece
+from custom_types import Piece
 
 
 # @profile
-def allowed_moves(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    surrounding_positions = get_surrounding_positions(pos, board.shape)
+cpdef list allowed_moves(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    surrounding_positions = get_surrounding_positions(pos, shape)
     filt_all_ms = []
     for move_pos in surrounding_positions:
         mp_piece = board[move_pos[0]][move_pos[1]]
@@ -18,10 +22,11 @@ def allowed_moves(
 
 
 # @profile
-def allowed_takes(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    surrounding_positions = get_surrounding_positions(pos, board.shape)
+cpdef list allowed_takes(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    surrounding_positions = get_surrounding_positions(pos, shape)
     filt_all_ts = []
     for take_pos in surrounding_positions:
         tp_piece = board[take_pos[0]][take_pos[1]]

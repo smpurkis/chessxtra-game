@@ -1,14 +1,15 @@
-from typing import List
-
 from Array import Array2D, get_diagonal_positions, sort_by_distance
-from custom_types import Piece, Position
-
+import numpy as np
+cimport numpy as np
+from custom_types cimport Piece
+from custom_types import Piece
 
 # @profile
-def allowed_moves(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    diagonal_positions = get_diagonal_positions(pos, board.shape)
+cpdef list allowed_moves(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    diagonal_positions = get_diagonal_positions(pos, shape)
     filt_all_ms = []
     for positions in diagonal_positions:
         for dir_positions in positions:
@@ -23,10 +24,11 @@ def allowed_moves(
 
 
 # @profile
-def allowed_takes(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    diagonal_positions = get_diagonal_positions(pos, board.shape)
+cpdef list allowed_takes(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    diagonal_positions = get_diagonal_positions(pos, shape)
     filt_all_ts = []
     for positions in diagonal_positions:
         for dir_positions in positions:

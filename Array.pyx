@@ -20,11 +20,6 @@ cpdef list filter_positions_off_board_list(
     return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
 
 
-cpdef set filter_positions_off_board_set(
-    set positions, tuple board_shape
-):
-    return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
-
 # @profile
 
 cpdef tuple get_col_row_positions(
@@ -69,7 +64,7 @@ cpdef list get_diagonal_positions(
     return diagonal_positions
 
 
-cpdef set get_l_positions(tuple pos, tuple board_shape):
+cpdef list get_l_positions(tuple pos, tuple board_shape):
     l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
     positions = filter_positions_off_board_list(
         [(pos[0] + i, pos[1] + j) for i, j in l_offsets], board_shape
@@ -77,9 +72,9 @@ cpdef set get_l_positions(tuple pos, tuple board_shape):
     return positions
 
 
-cpdef set get_surrounding_positions(tuple pos, tuple board_shape):
-    positions = filter_positions_off_board_set(
-        {(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}, board_shape
+cpdef list get_surrounding_positions(tuple pos, tuple board_shape):
+    positions = filter_positions_off_board_list(
+        [(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)], board_shape
     )
     return positions
 

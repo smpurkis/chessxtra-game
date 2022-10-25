@@ -1,20 +1,18 @@
-from typing import List
-
-from Array import (Array2D, get_col_row_positions, get_diagonal_positions,
-                   sort_by_distance)
-from custom_types import Piece, Position
-
+from Array import Array2D, get_col_row_positions, sort_by_distance
+import numpy as np
+cimport numpy as np
+from custom_types cimport Piece
+from custom_types import Piece
 
 # @profile
-def allowed_moves(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    position_lines = [
-        *get_col_row_positions(pos, board.shape),
-        *get_diagonal_positions(pos, board.shape),
-    ]
+cpdef list allowed_moves(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    index = -1 if is_white else 1
+    col_row_positions = get_col_row_positions(pos, shape)
     filt_all_ms = []
-    for positions in position_lines:
+    for positions in col_row_positions:
         for dir_positions in positions:
             dir_positions = sort_by_distance(piece.position, dir_positions)
             for move_pos in dir_positions:
@@ -27,15 +25,14 @@ def allowed_moves(
 
 
 # @profile
-def allowed_takes(
-    piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> List[Position]:
-    position_lines = [
-        *get_col_row_positions(pos, board.shape),
-        *get_diagonal_positions(pos, board.shape),
-    ]
+cpdef list allowed_takes(
+    Piece piece, np.ndarray board, tuple pos, bint is_white
+):
+    cdef tuple shape = (board.shape[0], board.shape[1])
+    index = -1 if is_white else 1
+    col_row_positions = get_col_row_positions(pos, shape)
     filt_all_ts = []
-    for positions in position_lines:
+    for positions in col_row_positions:
         for dir_positions in positions:
             dir_positions = sort_by_distance(piece.position, dir_positions)
             for take_pos in dir_positions:

@@ -54,7 +54,7 @@ cpdef Piece make_piece(tuple position, str symbol):
     return piece
 
 
-cpdef set allowed_moves(
+cpdef list allowed_moves(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
     full_symbol = piece.full_symbol
@@ -75,17 +75,17 @@ cpdef set allowed_moves(
     return allowed_moves_list
 
 
-cpdef set get_allowed_moves(Piece piece, np.ndarray board):
+cpdef list get_allowed_moves(Piece piece, np.ndarray board):
     pos = piece.position
     new_positions = allowed_moves(piece, board, pos, piece.is_white)
     cdef tuple shape = (board.shape[0], board.shape[1])
-    new_positions = {
+    new_positions = [
         p for p in new_positions if check_position_is_on_board(p, shape)
-    }
+    ]
     return new_positions
 
 
-cpdef allowed_takes(
+cpdef list allowed_takes(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
     full_symbol = piece.full_symbol
@@ -107,15 +107,18 @@ cpdef allowed_takes(
 
 
 # @profile
-cpdef set get_allowed_takes(Piece piece, np.ndarray board):
+cpdef list get_allowed_takes(Piece piece, np.ndarray board):
     pos = piece.position
     new_positions = allowed_takes(piece, board, pos, piece.is_white)
     cdef tuple shape = (board.shape[0], board.shape[1])
-    new_positions = {
+    new_positions = [
         p for p in new_positions if check_position_is_on_board(p, shape)
-    }
+    ]
     return new_positions
 
 
-cpdef set get_legal_moves(Piece piece, np.ndarray board):
-    return get_allowed_moves(piece, board).union(get_allowed_takes(piece, board))
+cpdef list get_legal_moves(Piece piece, np.ndarray board):
+    allowed_moves = get_allowed_moves(piece, board)
+    allowed_takes = get_allowed_takes(piece, board)
+    allowed = list(set(allowed_moves + allowed_takes))
+    return allowed
