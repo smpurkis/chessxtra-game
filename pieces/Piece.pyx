@@ -57,6 +57,10 @@ cpdef Piece make_piece(tuple position, str symbol):
 cpdef list allowed_moves(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
+    cdef:
+        str full_symbol
+        list allowed_moves_list
+
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
         allowed_moves_list = KingBehaviour.allowed_moves(piece, board, pos, is_white)
@@ -76,6 +80,10 @@ cpdef list allowed_moves(
 
 
 cpdef list get_allowed_moves(Piece piece, np.ndarray board):
+    cdef:
+        tuple pos
+        list new_positions
+
     pos = piece.position
     new_positions = allowed_moves(piece, board, pos, piece.is_white)
     cdef tuple shape = (board.shape[0], board.shape[1])
@@ -88,6 +96,10 @@ cpdef list get_allowed_moves(Piece piece, np.ndarray board):
 cpdef list allowed_takes(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
+    cdef:
+        str full_symbol
+        list allowed_moves_list
+
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
         allowed_takes_list = KingBehaviour.allowed_takes(piece, board, pos, is_white)
@@ -108,6 +120,10 @@ cpdef list allowed_takes(
 
 # @profile
 cpdef list get_allowed_takes(Piece piece, np.ndarray board):
+    cdef: 
+        tuple pos
+        list new_positions
+
     pos = piece.position
     new_positions = allowed_takes(piece, board, pos, piece.is_white)
     cdef tuple shape = (board.shape[0], board.shape[1])
@@ -118,6 +134,10 @@ cpdef list get_allowed_takes(Piece piece, np.ndarray board):
 
 
 cpdef list get_legal_moves(Piece piece, np.ndarray board):
+    cdef:
+        list allowed_moves
+        list allowed_takes
+
     allowed_moves = get_allowed_moves(piece, board)
     allowed_takes = get_allowed_takes(piece, board)
     allowed = list(set(allowed_moves + allowed_takes))

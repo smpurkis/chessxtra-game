@@ -9,7 +9,14 @@ from custom_types import Piece
 cpdef list allowed_moves(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
-    cdef tuple shape = (board.shape[0], board.shape[1])
+    cdef:
+        tuple shape = (board.shape[0], board.shape[1])
+        list new_positions
+        list filt_all_ms
+        tuple move_pos
+        int index
+        tuple p
+
     index = -1 if is_white else 1
     new_positions = [(pos[0] + index, pos[1])]
     new_positions = [
@@ -27,7 +34,15 @@ cpdef list allowed_moves(
 cpdef list allowed_takes(
     Piece piece, np.ndarray board, tuple pos, bint is_white
 ):
-    cdef tuple shape = (board.shape[0], board.shape[1])
+    cdef:
+        tuple shape = (board.shape[0], board.shape[1])
+        list new_positions
+        list filt_all_ts
+        tuple take_pos
+        int index
+        int row_i
+        tuple p
+    
     index = -1 if is_white else 1
     new_positions = [(pos[0] + index, pos[1] + row_i) for row_i in (-1, 1)]
     new_positions = [
