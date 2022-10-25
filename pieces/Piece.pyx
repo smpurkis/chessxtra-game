@@ -24,12 +24,12 @@ cpdef tuple get_piece_code_dict():
         piece_code_dict[piece_code[index]] = piece_code
         piece_code_dict[piece_code[index].lower()] = piece_code
 
-        inverse_piece_code_dict[piece_code] = {
+        inverse_piece_code_dict[piece_code] = [
             piece_code,
             piece_code.lower(),
             piece_code[index],
             piece_code[index].lower(),
-        }
+        ]
     return piece_code_dict, inverse_piece_code_dict
 
 
@@ -59,20 +59,20 @@ cpdef set allowed_moves(
 ):
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
-        allowed_moves_set = KingBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = KingBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "QUEEN":
-        allowed_moves_set = QueenBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = QueenBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "ROOK":
-        allowed_moves_set = RookBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = RookBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "BISHOP":
-        allowed_moves_set = BishopBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = BishopBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "KNIGHT":
-        allowed_moves_set = KnightBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = KnightBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "PAWN":
-        allowed_moves_set = PawnBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = PawnBehaviour.allowed_moves(piece, board, pos, is_white)
     else:
-        allowed_moves_set = set()
-    return allowed_moves_set
+        allowed_moves_list = []
+    return allowed_moves_list
 
 
 cpdef set get_allowed_moves(Piece piece, np.ndarray board):
@@ -90,20 +90,20 @@ cpdef allowed_takes(
 ):
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
-        allowed_takes_set = KingBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = KingBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "QUEEN":
-        allowed_takes_set = QueenBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = QueenBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "ROOK":
-        allowed_takes_set = RookBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = RookBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "BISHOP":
-        allowed_takes_set = BishopBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = BishopBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "KNIGHT":
-        allowed_takes_set = KnightBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = KnightBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "PAWN":
-        allowed_takes_set = PawnBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = PawnBehaviour.allowed_takes(piece, board, pos, is_white)
     else:
-        allowed_takes_set = set()
-    return allowed_takes_set
+        allowed_takes_list = []
+    return allowed_takes_list
 
 
 # @profile

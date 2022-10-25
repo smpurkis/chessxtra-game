@@ -25,6 +25,7 @@ cpdef set filter_positions_off_board_set(
 ):
     return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
 
+# @profile
 
 cpdef tuple get_col_row_positions(
     tuple pos, tuple board_shape, long max_range = 0
@@ -70,8 +71,8 @@ cpdef list get_diagonal_positions(
 
 cpdef set get_l_positions(tuple pos, tuple board_shape):
     l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
-    positions = filter_positions_off_board_set(
-        {(pos[0] + i, pos[1] + j) for i, j in l_offsets}, board_shape
+    positions = filter_positions_off_board_list(
+        [(pos[0] + i, pos[1] + j) for i, j in l_offsets], board_shape
     )
     return positions
 
