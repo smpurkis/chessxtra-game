@@ -1,6 +1,6 @@
 # from Array_opt import check_position_is_on_board, dist
 from functools import wraps
-from typing import Any, List, Optional, Set, Tuple, Union, Dict
+from typing import Any, List, Optional, Tuple, Union, Dict
 
 
 class Array2D:
@@ -35,7 +35,7 @@ def cache(func):
             key = (func, args, kwargs)
         if any(
             [
-                isinstance(a, dict) or isinstance(a, list) or isinstance(a, set)
+                isinstance(a, dict) or isinstance(a, list)
                 for a in args
             ]
         ):
@@ -77,12 +77,6 @@ def filter_positions_off_board_list(
     return filtered_positions
     # return [pos for pos in positions if check_position_is_on_board(pos, board_shape)]
 
-
-# @profile
-def filter_positions_off_board_set(
-    positions: Set[Position], board_shape: Shape
-) -> Set[Position]:
-    return {pos for pos in positions if check_position_is_on_board(pos, board_shape)}
 
 
 # @profile
@@ -137,10 +131,10 @@ def get_diagonal_positions(
 # @profile
 
 # @cache
-def get_l_positions(pos: Position, board_shape: Shape) -> Set[Position]:
+def get_l_positions(pos: Position, board_shape: Shape) -> List[Position]:
     l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
-    positions = filter_positions_off_board_set(
-        {(pos[0] + i, pos[1] + j) for i, j in l_offsets}, board_shape
+    positions = filter_positions_off_board_list(
+        [(pos[0] + i, pos[1] + j) for i, j in l_offsets], board_shape
     )
     return positions
 
@@ -148,9 +142,9 @@ def get_l_positions(pos: Position, board_shape: Shape) -> Set[Position]:
 # @profile
 
 # @cache
-def get_surrounding_positions(pos: Position, board_shape: Shape) -> Set[Position]:
-    positions = filter_positions_off_board_set(
-        {(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}, board_shape
+def get_surrounding_positions(pos: Position, board_shape: Shape) -> List[Position]:
+    positions = filter_positions_off_board_list(
+        [(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)], board_shape
     )
     return positions
 

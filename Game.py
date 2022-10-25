@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Optional, Set, Tuple, Union, List
+from typing import Dict, Optional, Tuple, Union, List
 
 from Array import Array2D
 
@@ -109,7 +109,7 @@ def start_setup(game: Game, setup_position: str) -> Game:
 # @profile
 def get_all_legal_moves(
     game: Game, colour: Optional[str] = None, include_empty: bool = True
-) -> Dict[Piece, Set[Position]]:
+) -> Dict[Piece, List[Position]]:
     legal_moves = {}
     for row_no in range(game.board.shape[0]):
         for col_no in range(game.board.shape[1]):
@@ -123,14 +123,14 @@ def get_all_legal_moves(
 
 
 # @profile
-def get_pieces(game: Game, colour: Optional[str] = None) -> Set[Piece]:
-    pieces = set()
+def get_pieces(game: Game, colour: Optional[str] = None) -> List[Piece]:
+    pieces = []
     for row_no in range(game.board.shape[0]):
         for col_no in range(game.board.shape[1]):
             piece: Union[Piece, str] = game.board[row_no][col_no]
             if isinstance(piece, Piece):
                 if colour is None or piece.colour == colour and piece.in_play:
-                    pieces.add(piece)
+                    pieces.append(piece)
     return pieces
 
 
@@ -146,7 +146,7 @@ def move(game: Game, pos_1: Position, pos_2: Position, dry_run: bool = False) ->
     allowed_moves = get_allowed_moves(piece, game.board)
     allowed_takes = get_allowed_takes(piece, game.board)
 
-    if pos_2 not in allowed_moves.union(allowed_takes):
+    if pos_2 not in set(allowed_moves + allowed_takes):
         raise IllegalMove(f"position 1: {pos_1}, position 2: {pos_2}")
 
     if dry_run:

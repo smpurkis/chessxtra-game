@@ -1,4 +1,4 @@
-from typing import Dict, Set, Tuple
+from typing import Dict, Tuple, List
 
 from Array import Array2D, check_position_is_on_board
 from custom_types import Piece, Position
@@ -15,7 +15,7 @@ PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
 
 # @profile
-def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
+def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, List[str]]]:
     piece_code_dict = {}
     inverse_piece_code_dict = {}
     for piece_code in PIECE_CODES:
@@ -27,12 +27,12 @@ def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
         piece_code_dict[piece_code[index]] = piece_code
         piece_code_dict[piece_code[index].lower()] = piece_code
 
-        inverse_piece_code_dict[piece_code] = {
+        inverse_piece_code_dict[piece_code] = [
             piece_code,
             piece_code.lower(),
             piece_code[index],
             piece_code[index].lower(),
-        }
+        ]
     return piece_code_dict, inverse_piece_code_dict
 
 
@@ -60,67 +60,70 @@ def make_piece(position: Position, symbol: str) -> Piece:
 # @profile
 def allowed_moves(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> Set[Position]:
+) -> List[Position]:
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
-        allowed_moves_set = KingBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = KingBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "QUEEN":
-        allowed_moves_set = QueenBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = QueenBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "ROOK":
-        allowed_moves_set = RookBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = RookBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "BISHOP":
-        allowed_moves_set = BishopBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = BishopBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "KNIGHT":
-        allowed_moves_set = KnightBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = KnightBehaviour.allowed_moves(piece, board, pos, is_white)
     elif full_symbol == "PAWN":
-        allowed_moves_set = PawnBehaviour.allowed_moves(piece, board, pos, is_white)
+        allowed_moves_list = PawnBehaviour.allowed_moves(piece, board, pos, is_white)
     else:
-        allowed_moves_set = set()
-    return allowed_moves_set
+        allowed_moves_list = []
+    return allowed_moves_list
 
 
 # @profile
-def get_allowed_moves(piece: Piece, board: Array2D) -> Set[Position]:
+def get_allowed_moves(piece: Piece, board: Array2D) -> List[Position]:
     pos = piece.position
-    new_positions: Set[Position] = allowed_moves(piece, board, pos, piece.is_white)
-    new_positions = {
+    new_positions: List[Position] = allowed_moves(piece, board, pos, piece.is_white)
+    new_positions = [
         p for p in new_positions if check_position_is_on_board(p, board.shape)
-    }
+    ]
     return new_positions
 
 
 # @profile
 def allowed_takes(
     piece: Piece, board: Array2D, pos: Position, is_white: bool
-) -> Set[Position]:
+) -> List[Position]:
     full_symbol = piece.full_symbol
     if full_symbol == "KING":
-        allowed_takes_set = KingBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = KingBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "QUEEN":
-        allowed_takes_set = QueenBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = QueenBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "ROOK":
-        allowed_takes_set = RookBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = RookBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "BISHOP":
-        allowed_takes_set = BishopBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = BishopBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "KNIGHT":
-        allowed_takes_set = KnightBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = KnightBehaviour.allowed_takes(piece, board, pos, is_white)
     elif full_symbol == "PAWN":
-        allowed_takes_set = PawnBehaviour.allowed_takes(piece, board, pos, is_white)
+        allowed_takes_list = PawnBehaviour.allowed_takes(piece, board, pos, is_white)
     else:
-        allowed_takes_set = set()
-    return allowed_takes_set
+        allowed_takes_list = []
+    return allowed_takes_list
 
 
 # @profile
-def get_allowed_takes(piece: Piece, board: Array2D) -> Set[Position]:
+def get_allowed_takes(piece: Piece, board: Array2D) -> List[Position]:
     pos = piece.position
-    new_positions: Set[Position] = allowed_takes(piece, board, pos, piece.is_white)
-    new_positions = {
+    new_positions: List[Position] = allowed_takes(piece, board, pos, piece.is_white)
+    new_positions = [
         p for p in new_positions if check_position_is_on_board(p, board.shape)
-    }
+    ]
     return new_positions
 
 
 # @profile
-def get_legal_moves(piece: Piece, board: Array2D) -> Set[Position]:
-    return get_allowed_moves(piece, board).union(get_allowed_takes(piece, board))
+def get_legal_moves(piece: Piece, board: Array2D) -> List[Position]:
+    allowed_moves = get_allowed_moves(piece, board)
+    allowed_takes = get_allowed_takes(piece, board)
+    allowed = list(set(allowed_moves + allowed_takes))
+    return allowed
