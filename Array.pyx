@@ -25,6 +25,13 @@ cpdef list filter_positions_off_board_list(
 cpdef tuple get_col_row_positions(
     tuple pos, tuple board_shape, long max_range = 0
 ):
+    cdef:
+        long col_range
+        long row_range
+        list column_positions
+        list row_positions
+        long i
+
     col_range = board_shape[0] if max_range == 0 else min(board_shape[0], max_range)
     column_positions = split_at_position(
         filter_positions_off_board_list(
@@ -45,6 +52,14 @@ cpdef tuple get_col_row_positions(
 cpdef list get_diagonal_positions(
     tuple pos, tuple board_shape, int max_range = 0
 ):
+    cdef:
+        list diagonal_positions
+        long a
+        long b
+        long highest_board_shape
+        long diagonal_range
+        list positions
+
     diagonal_positions = []
     for a, b in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
         highest_board_shape = max(*board_shape)
@@ -65,7 +80,11 @@ cpdef list get_diagonal_positions(
 
 
 cpdef list get_l_positions(tuple pos, tuple board_shape):
-    l_offsets = ((-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1))
+    cdef:
+        list l_offsets
+        list positions
+
+    l_offsets = [(-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1)]
     positions = filter_positions_off_board_list(
         [(pos[0] + i, pos[1] + j) for i, j in l_offsets], board_shape
     )
@@ -73,7 +92,7 @@ cpdef list get_l_positions(tuple pos, tuple board_shape):
 
 
 cpdef list get_surrounding_positions(tuple pos, tuple board_shape):
-    positions = filter_positions_off_board_list(
+    cdef list positions = filter_positions_off_board_list(
         [(pos[0] + i, pos[1] + j) for i in (-1, 0, 1) for j in (-1, 0, 1)], board_shape
     )
     return positions
@@ -85,6 +104,6 @@ cpdef list split_at_position(list positions, tuple pos):
 
 
 cpdef list sort_by_distance(tuple pos, list positions):
-    position_distances = sorted([(dist(pos, p), p) for p in positions])
-    distances = [p[1] for p in position_distances]
+    cdef list position_distances = sorted([(dist(pos, p), p) for p in positions])
+    cdef list distances = [p[1] for p in position_distances]
     return distances
