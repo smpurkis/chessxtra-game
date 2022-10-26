@@ -17,6 +17,7 @@ pythran = "^0.12.0"
 mypy = "^0.982"
 Cython = "3.0a11"
 line-profiler = "^3.5.1"
+project-graph = {git = "https://github.com/fior-di-latte/project_graph.git"}
 
 [build-system]
 requires = ["poetry-core"]
