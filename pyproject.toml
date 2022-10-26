@@ -19,6 +19,7 @@ Cython = "3.0a11"
 line-profiler = "^3.5.1"
 project-graph = {git = "https://github.com/fior-di-latte/project_graph.git"}
 snakeviz = "^2.1.1"
+numba = "^0.56.3"
 
 [build-system]
 requires = ["poetry-core"]

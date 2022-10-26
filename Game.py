@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, Optional, Tuple, Union, List
 
 from Array import Array2D
+import numpy as np
 
 # import numpy as np
 from pieces.Piece import (
@@ -41,8 +42,8 @@ def initialize_game(
     game = Game(
         shape=shape,
         setup=setup,
-        board=Array2D(shape=shape),
-        # board=np.full(shape=shape, fill_value="-", dtype=object),
+        # board=Array2D(shape=shape),
+        board=np.full(shape=shape, fill_value="-", dtype=object),
         board_state=board_state,
         completed=False,
         moves=[],

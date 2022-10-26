@@ -2,7 +2,7 @@
 from functools import wraps
 from typing import Any, List, Optional, Tuple, Union, Dict
 import marshal
-
+import numba
 
 class Array2D:
     def __init__(self, shape: Tuple[int, int] = (6, 4)) -> None:
