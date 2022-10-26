@@ -43,6 +43,7 @@ cpdef list allowed_takes(
         list positions
         tuple take_pos
         int index
+        list dir_positions
 
     index = -1 if is_white else 1
     col_row_positions = get_col_row_positions(pos, shape)

@@ -1,5 +1,6 @@
 cimport cython
 import numpy as np
+cimport numpy as np
 
 Array2D = np.ndarray
 
@@ -9,8 +10,9 @@ cpdef bint check_position_is_on_board(tuple position, tuple board_shape):
         0 <= position[1] <= board_shape[1] - 1
     )
 
-
-cpdef double dist(tuple pos1, tuple pos2):
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)
+cdef long dist(tuple pos1, tuple pos2):
     return abs(pos1[0] - pos2[0]) - abs(pos1[1] - pos2[1])
 
 
@@ -103,6 +105,8 @@ cpdef list split_at_position(list positions, tuple pos):
     return [positions[0:index], positions[index + 1 : len(positions)]]
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cpdef list sort_by_distance(tuple pos, list positions):
     cdef list position_distances = sorted([(dist(pos, p), p) for p in positions])
     cdef list distances = [p[1] for p in position_distances]
