@@ -1,6 +1,7 @@
 # from Array_opt import check_position_is_on_board, dist
 from functools import wraps
 from typing import Any, List, Optional, Tuple, Union, Dict
+import marshal
 
 
 class Array2D:
@@ -29,17 +30,11 @@ CACHE_DICT: Dict[str, Any] = {}
 def cache(func):
     @wraps(func)
     def wrapper_decorator(*args, **kwargs):
-        if len(kwargs) == 0:
-            key = (func, args)
-        else:
-            key = (func, args, kwargs)
-        if any(
-            [
-                isinstance(a, dict) or isinstance(a, list)
-                for a in args
-            ]
-        ):
-            key = str(key)
+        # if len(kwargs) == 0:
+        #     key = str((func, args))
+        # else:
+        #     key = str((func, args, kwargs.items()))
+        key = marshal.dumps((func.__name__, args, kwargs))
         if key in CACHE_DICT:
             value = CACHE_DICT[key]
         else:
@@ -53,19 +48,27 @@ def cache(func):
 Position = Tuple[int, int]
 Shape = Tuple[int, int]
 
+all_positions = tuple((i, j) for i in range(6) for j in range(4))
 
+
+# @cache
 # @profile
 def check_position_is_on_board(position: Position, board_shape: Shape) -> bool:
     return (0 <= position[0] <= board_shape[0] - 1) and (
         0 <= position[1] <= board_shape[1] - 1
     )
 
+# board_shape = (6, 4)
+# for pos in all_positions:
+#     check_position_is_on_board(pos, board_shape)
 
+# @cache
 # @profile
-def dist(pos1: Position, pos2: Position) -> float:
+def dist(pos1: Position, pos2: Position) -> int:
     return abs(pos1[0] - pos2[0]) - abs(pos1[1] - pos2[1])
 
 
+# @cache
 # @profile
 def filter_positions_off_board_list(
     positions: List[Position], board_shape: Shape
@@ -105,7 +108,7 @@ def get_col_row_positions(
 # @profile
 
 
-@cache
+# @cache
 def get_diagonal_positions(
     pos: Position, board_shape: Shape, max_range: Optional[int] = None
 ) -> List[List[List[Tuple[int, int]]]]:

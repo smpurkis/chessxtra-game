@@ -38,7 +38,7 @@ def run_random_games(n: int = 1) -> None:
 
 def main() -> None:
     s = time()
-    run_random_games(1_000)
+    run_random_games(200)
     print(time() - s)
 
 
