@@ -10,6 +10,7 @@ from pieces import (
     QueenBehaviour,
     RookBehaviour,
 )
+import json
 
 PIECE_CODES = {"KING", "QUEEN", "ROOK", "BISHOP", "KNIGHT", "PAWN"}
 
@@ -37,6 +38,7 @@ def get_piece_code_dict() -> Tuple[Dict[str, str], Dict[str, List[str]]]:
 
 
 PIECE_CODE_DICT, INVERSE_PIECE_CODE_DICT = get_piece_code_dict()
+json.dump(PIECE_CODE_DICT, open("PIECE_CODE_DICT.json", "w"), sort_keys=True, indent=4)
 ALLOWED_PIECE_CODES = PIECE_CODE_DICT.keys()
 
 

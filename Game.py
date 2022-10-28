@@ -92,7 +92,7 @@ def setup_position(game: Game, board_state: str) -> Game:
 # @profile
 def start_setup(game: Game, setup_position: str) -> Game:
     setup_lines = setup_position.split("\n")
-    for piece_code, col_no in zip(setup_lines[0], range(game.board.shape[1])):
+    for piece_code, col_no in zip(setup_lines[0], range(game.board.shape[0])):
         game.board[0][col_no] = make_piece((0, col_no), piece_code)
         game.board[-1][col_no] = make_piece(
             (game.board.shape[0] - 1, col_no), piece_code.upper()
