@@ -43,7 +43,10 @@ fn setup_position(mut game: Game) -> Game {
         .map(|s: &str| s.chars().collect())
         .collect();
     for (piece_code, col_no) in setup_lines[0].iter().zip(0..game.shape.0) {
-        let piece = Piece::new(Position(0, col_no.try_into().unwrap()), piece_code.to_string());
+        let piece = Piece::new(
+            Position(0, col_no.try_into().unwrap()),
+            piece_code.to_string(),
+        );
         game.board[0][col_no] = PositionContent::PieceContent(piece);
     }
 

@@ -3,7 +3,8 @@ use std::ops::Index;
 use crate::types::{Position, Shape};
 
 pub(crate) fn check_position_is_on_board(pos: &Position, shape: &Shape) -> bool {
-    (0 <= pos.0 && pos.0 + 1 <= shape.0.try_into().unwrap()) && (0 <= pos.1 && pos.1 + 1 <= shape.1.try_into().unwrap())
+    (0 <= pos.0 && pos.0 + 1 <= shape.0.try_into().unwrap())
+        && (0 <= pos.1 && pos.1 + 1 <= shape.1.try_into().unwrap())
 }
 
 fn dist(pos1: &Position, pos2: &Position) -> isize {
@@ -18,7 +19,8 @@ fn filter_positions_off_board(positions: Vec<Position>, shape: &Shape) -> Vec<Po
 }
 
 pub(crate) fn get_col_row_positions(
-    pos: &Position, shape: &Shape
+    pos: &Position,
+    shape: &Shape,
 ) -> (Vec<Vec<Position>>, Vec<Vec<Position>>) {
     let mut new_positions = Vec::with_capacity(shape.0);
     for i in 0..shape.0 {
@@ -36,21 +38,37 @@ pub(crate) fn get_col_row_positions(
     (column_positions, row_positions)
 }
 
+pub(crate) fn get_diagonal_positions(pos: &Position, shape: &Shape) -> Vec<Position> {
+    let diagonal_positions: Vec<Position> = vec![];
+    for (a, b) in vec![(1, 1), (1, -1), (-1, 1), (-1, -1)] {
+        let highest_board_shape = if shape.0 > shape.1 { shape.0 } else { shape.1 };
+        let diagonal_range = highest_board_shape;
+        let positions = split_at_position(positions, pos)
+        // todo
+    }
+}
+
 pub(crate) fn get_l_positions(pos: &Position, board_shape: &Shape) -> Vec<Position> {
-    let l_offsets = vec![(-1, 2), (1, 2), (-1, -2), (1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1)];
+    let l_offsets = vec![
+        (-1, 2),
+        (1, 2),
+        (-1, -2),
+        (1, -2),
+        (2, 1),
+        (2, -1),
+        (-2, 1),
+        (-2, -1),
+    ];
     let mut new_positions: Vec<Position> = Vec::with_capacity(l_offsets.len());
     for (i, j) in l_offsets {
         new_positions.push(Position(pos.0 + i, pos.1 + j))
     }
-    let positions = filter_positions_off_board(
-        new_positions, board_shape
-    );
+    let positions = filter_positions_off_board(new_positions, board_shape);
     positions
 }
 
-
-pub(crate) fn get_surrounding_positions(positions: Vec<Position>, pos: Position, shape: &Shape) -> Vec<Position> {
-    let mut new_positions: Vec<Position> = Vec::with_capacity(3*positions.len());
+pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Position> {
+    let mut new_positions: Vec<Position> = Vec::with_capacity(9);
     for i in -1_isize..=1 {
         for j in -1_isize..=1 {
             new_positions.push(Position(pos.0 + i, pos.1 + j))
@@ -63,14 +81,15 @@ pub(crate) fn get_surrounding_positions(positions: Vec<Position>, pos: Position,
 fn split_at_position(positions: Vec<Position>, pos: &Position) -> Vec<Vec<Position>> {
     let index = 1;
     // TODO: May be able to remove .to_vec() and speed up by reducing allocations
-    vec![positions[0..index].to_vec(), positions[(index+1)..positions.len()].to_vec()]
+    vec![
+        positions[0..index].to_vec(),
+        positions[(index + 1)..positions.len()].to_vec(),
+    ]
 }
 
 fn sort_by_distance(pos: Position, positions: Vec<Position>) -> Vec<Position> {
-    let mut position_distances: Vec<(isize, Position)>= positions
-    .into_iter()
-    .map(|p| (dist(&pos, &p), p))
-    .collect();
+    let mut position_distances: Vec<(isize, Position)> =
+        positions.into_iter().map(|p| (dist(&pos, &p), p)).collect();
     position_distances.sort_by(|a, b| a.0.cmp(&b.0));
     let positions: Vec<Position> = position_distances.into_iter().map(|(d, p)| p).collect();
     positions

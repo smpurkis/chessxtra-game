@@ -62,20 +62,26 @@ impl Piece {
     }
 }
 
-fn allowed_moves(piece: &Piece, board: &Array2D, pos: &Position, is_white: bool) -> Vec<Position> {
+fn allowed_moves(
+    piece: &Piece,
+    board: &Array2D,
+    pos: &Position,
+    shape: &Shape,
+    is_white: bool,
+) -> Vec<Position> {
     let full_symbol = piece.full_symbol;
     match full_symbol {
-        PieceClass::King => KingBehaviour::allowed_moves(piece, board, pos, is_white),
-        PieceClass::Queen => QueenBehaviour::allowed_moves(piece, board, pos, is_white),
-        PieceClass::Rook => RookBehaviour::allowed_moves(piece, board, pos, is_white),
-        PieceClass::Bishop => BishopBehaviour::allowed_moves(piece, board, pos, is_white),
-        PieceClass::Knight => KnightBehaviour::allowed_moves(piece, board, pos, is_white),
-        PieceClass::Pawn => PawnBehaviour::allowed_moves(piece, board, pos, is_white),
+        PieceClass::King => KingBehaviour::allowed_moves(piece, board, pos, shape, is_white),
+        PieceClass::Queen => QueenBehaviour::allowed_moves(piece, board, pos, shape, is_white),
+        PieceClass::Rook => RookBehaviour::allowed_moves(piece, board, pos, shape, is_white),
+        PieceClass::Bishop => BishopBehaviour::allowed_moves(piece, board, pos, shape, is_white),
+        PieceClass::Knight => KnightBehaviour::allowed_moves(piece, board, pos, shape, is_white),
+        PieceClass::Pawn => PawnBehaviour::allowed_moves(piece, board, pos, shape, is_white),
     }
 }
 
 fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
-    let new_positions = allowed_moves(piece, board, &piece.position, piece.is_white);
+    let new_positions = allowed_moves(piece, board, &piece.position, shape, piece.is_white);
     let new_positions = new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))
@@ -83,20 +89,26 @@ fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Posit
     new_positions
 }
 
-fn allowed_takes(piece: &Piece, board: &Array2D, pos: &Position, is_white: bool) -> Vec<Position> {
+fn allowed_takes(
+    piece: &Piece,
+    board: &Array2D,
+    pos: &Position,
+    shape: &Shape,
+    is_white: bool,
+) -> Vec<Position> {
     let full_symbol = piece.full_symbol;
     match full_symbol {
-        PieceClass::King => KingBehaviour::allowed_takes(piece, board, pos, is_white),
-        PieceClass::Queen => QueenBehaviour::allowed_takes(piece, board, pos, is_white),
-        PieceClass::Rook => RookBehaviour::allowed_takes(piece, board, pos, is_white),
-        PieceClass::Bishop => BishopBehaviour::allowed_takes(piece, board, pos, is_white),
-        PieceClass::Knight => KnightBehaviour::allowed_takes(piece, board, pos, is_white),
-        PieceClass::Pawn => PawnBehaviour::allowed_takes(piece, board, pos, is_white),
+        PieceClass::King => KingBehaviour::allowed_takes(piece, board, pos, shape, is_white),
+        PieceClass::Queen => QueenBehaviour::allowed_takes(piece, board, pos, shape, is_white),
+        PieceClass::Rook => RookBehaviour::allowed_takes(piece, board, pos, shape, is_white),
+        PieceClass::Bishop => BishopBehaviour::allowed_takes(piece, board, pos, shape, is_white),
+        PieceClass::Knight => KnightBehaviour::allowed_takes(piece, board, pos, shape, is_white),
+        PieceClass::Pawn => PawnBehaviour::allowed_takes(piece, board, pos, shape, is_white),
     }
 }
 
 fn get_allowed_takes(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
-    let new_positions = allowed_takes(piece, board, &piece.position, piece.is_white);
+    let new_positions = allowed_takes(piece, board, &piece.position, shape, piece.is_white);
     let new_positions = new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))
