@@ -33,8 +33,8 @@ static PIECE_CODE_HASHMAP: phf::Map<&'static str, PieceClass> = phf_map! {
 };
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Piece {
-    position: Position,
-    symbol: String,
+    pub(crate) position: Position,
+    pub(crate) symbol: String,
     pub(crate) full_symbol: PieceClass,
     pub(crate) is_white: bool,
     pub(crate) colour: String,
@@ -80,7 +80,7 @@ fn allowed_moves(
     }
 }
 
-fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
+pub(crate) fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_moves(piece, board, &piece.position, shape, piece.is_white);
     let new_positions = new_positions
         .into_iter()
@@ -107,7 +107,7 @@ fn allowed_takes(
     }
 }
 
-fn get_allowed_takes(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
+pub(crate) fn get_allowed_takes(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_takes(piece, board, &piece.position, shape, piece.is_white);
     let new_positions = new_positions
         .into_iter()

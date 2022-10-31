@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::pieces::piece::{get_legal_moves, Piece};
+use crate::pieces::piece::{get_legal_moves, Piece, get_allowed_moves, get_allowed_takes};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
 
 enum Colour {
@@ -121,4 +121,50 @@ fn get_pieces_with_colour<'a>(game: &'a Game, colour: Colour) -> Vec<&'a Piece> 
         }
     }
     pieces
+}
+
+fn check_move(game: &mut Game, pos_1: &Position, pos_2: &Position) -> bool {
+    move_pos(game, pos_1, pos_2, true)
+}
+
+
+fn move_pos(game: &mut Game, pos_1: &Position, pos_2: &Position, dry_run: bool) -> bool {
+    let piece: &PositionContent = &game.board[usize::try_from(pos_1.0).unwrap()][usize::try_from(pos_1.1).unwrap()];    
+    
+    match piece {
+        PositionContent::Empty => panic!("Tried to move an empty square!"),
+        PositionContent::PieceContent(piece) => {
+            let allowed_moves = get_allowed_moves(piece, &game.board, &game.shape);
+            let allowed_takes = get_allowed_takes(piece, &game.board, &game.shape);
+        
+            let mut allowed_new_positions: Vec<&Position> = Vec::with_capacity(allowed_moves.len() + allowed_takes.len());
+            allowed_new_positions.extend(&allowed_moves);
+            allowed_new_positions.extend(&allowed_takes);
+            allowed_new_positions.sort_unstable();
+            allowed_new_positions.dedup();
+
+            if allowed_new_positions.contains(&pos_2) {
+                panic!["Illegal move detected!"]
+            }
+
+            if dry_run {
+                return true;
+            }
+
+            // let move_str = format!("{0}{1}{2}->", piece.symbol, pos_1.0, pos_1.1);
+
+            if allowed_takes.contains(pos_2) {
+                let take_piece: &mut PositionContent = &mut game.board[usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()];    
+                match take_piece {
+                    PositionContent::PieceContent(take_piece) => {
+                        take_piece.in_play = false;
+                        take_piece.position = Position(-1, -1);
+                    },
+                    PositionContent::Empty => (),
+                }
+            }
+        },
+    }
+    
+    true
 }
