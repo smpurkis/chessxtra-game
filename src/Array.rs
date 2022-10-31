@@ -38,14 +38,24 @@ pub(crate) fn get_col_row_positions(
     (column_positions, row_positions)
 }
 
-pub(crate) fn get_diagonal_positions(pos: &Position, shape: &Shape) -> Vec<Position> {
-    let diagonal_positions: Vec<Position> = vec![];
+pub(crate) fn get_diagonal_positions(pos: &Position, shape: &Shape) -> Vec<Vec<Vec<Position>>> {
+    let mut diagonal_positions: Vec<_> = vec![];
     for (a, b) in vec![(1, 1), (1, -1), (-1, 1), (-1, -1)] {
         let highest_board_shape = if shape.0 > shape.1 { shape.0 } else { shape.1 };
         let diagonal_range = highest_board_shape;
-        let positions = split_at_position(positions, pos)
-        // todo
+        let tmp_positions: Vec<Position> = (0..diagonal_range)
+            .into_iter()
+            .map(|i| {
+                Position(
+                    pos.0 + (isize::try_from(i).unwrap() * a),
+                    pos.1 + (isize::try_from(i).unwrap() * b),
+                )
+            })
+            .collect();
+        let positions = split_at_position(filter_positions_off_board(tmp_positions, shape), pos);
+        diagonal_positions.push(positions);
     }
+    diagonal_positions
 }
 
 pub(crate) fn get_l_positions(pos: &Position, board_shape: &Shape) -> Vec<Position> {
@@ -87,7 +97,7 @@ fn split_at_position(positions: Vec<Position>, pos: &Position) -> Vec<Vec<Positi
     ]
 }
 
-fn sort_by_distance(pos: Position, positions: Vec<Position>) -> Vec<Position> {
+pub(crate) fn sort_by_distance(pos: &Position, positions: Vec<Position>) -> Vec<Position> {
     let mut position_distances: Vec<(isize, Position)> =
         positions.into_iter().map(|p| (dist(&pos, &p), p)).collect();
     position_distances.sort_by(|a, b| a.0.cmp(&b.0));
