@@ -1,19 +1,20 @@
 use std::collections::HashMap;
 
-use crate::pieces::piece::{get_legal_moves, Piece, get_allowed_moves, get_allowed_takes};
+use crate::pieces::piece::{self, get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
 
-enum Colour {
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Colour {
     White,
     Black,
 }
 
-struct Game {
+pub struct Game {
     board: Array2D,
     moves: Vec<String>,
-    completed: bool,
-    winner: Option<Colour>,
-    turn: Colour,
+    pub completed: bool,
+    pub winner: Option<Colour>,
+    pub turn: Colour,
     setup: String,
     shape: Shape,
 }
@@ -53,7 +54,7 @@ fn setup_position(mut game: Game) -> Game {
     game
 }
 
-fn check_completed(mut game: Game) {
+fn check_completed(mut game: &mut Game) {
     let pieces = get_pieces(&game);
     let white_pieces: Vec<&&Piece> = pieces.iter().filter(|p: &&&Piece| p.is_white).collect();
     let black_pieces: Vec<&&Piece> = pieces.iter().filter(|p: &&&Piece| !p.is_white).collect();
@@ -83,7 +84,10 @@ fn check_completed(mut game: Game) {
     }
 }
 
-fn get_all_legal_moves_with_colour(game: &Game, colour: Colour) -> HashMap<&Piece, Vec<Position>> {
+pub fn get_all_legal_moves_with_colour(
+    game: &Game,
+    colour: Colour,
+) -> HashMap<&Piece, Vec<Position>> {
     let mut legal_moves = HashMap::new();
     let white_pieces = get_pieces_with_colour(&game, Colour::White);
     white_pieces.into_iter().for_each(|piece| {
@@ -123,27 +127,28 @@ fn get_pieces_with_colour<'a>(game: &'a Game, colour: Colour) -> Vec<&'a Piece> 
     pieces
 }
 
-fn check_move(game: &mut Game, pos_1: &Position, pos_2: &Position) -> bool {
+fn check_move(game: &mut Game, pos_1: Position, pos_2: Position) -> bool {
     move_pos(game, pos_1, pos_2, true)
 }
 
+fn move_pos(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bool) -> bool {
+    let piece: &PositionContent =
+        &game.board[usize::try_from(pos_1.0).unwrap()][usize::try_from(pos_1.1).unwrap()];
 
-fn move_pos(game: &mut Game, pos_1: &Position, pos_2: &Position, dry_run: bool) -> bool {
-    let piece: &PositionContent = &game.board[usize::try_from(pos_1.0).unwrap()][usize::try_from(pos_1.1).unwrap()];    
-    
     match piece {
         PositionContent::Empty => panic!("Tried to move an empty square!"),
         PositionContent::PieceContent(piece) => {
             let allowed_moves = get_allowed_moves(piece, &game.board, &game.shape);
             let allowed_takes = get_allowed_takes(piece, &game.board, &game.shape);
-        
-            let mut allowed_new_positions: Vec<&Position> = Vec::with_capacity(allowed_moves.len() + allowed_takes.len());
+
+            let mut allowed_new_positions: Vec<&Position> =
+                Vec::with_capacity(allowed_moves.len() + allowed_takes.len());
             allowed_new_positions.extend(&allowed_moves);
             allowed_new_positions.extend(&allowed_takes);
             allowed_new_positions.sort_unstable();
             allowed_new_positions.dedup();
 
-            if allowed_new_positions.contains(&pos_2) {
+            if allowed_new_positions.contains(&&pos_2) {
                 panic!["Illegal move detected!"]
             }
 
@@ -152,19 +157,39 @@ fn move_pos(game: &mut Game, pos_1: &Position, pos_2: &Position, dry_run: bool) 
             }
 
             // let move_str = format!("{0}{1}{2}->", piece.symbol, pos_1.0, pos_1.1);
-
-            if allowed_takes.contains(pos_2) {
-                let take_piece: &mut PositionContent = &mut game.board[usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()];    
-                match take_piece {
-                    PositionContent::PieceContent(take_piece) => {
-                        take_piece.in_play = false;
-                        take_piece.position = Position(-1, -1);
-                    },
-                    PositionContent::Empty => (),
+            let take_piece: &mut PositionContent = &mut game.board
+                [usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()];
+            match take_piece {
+                PositionContent::PieceContent(take_piece) => {
+                    take_piece.in_play = false;
+                    take_piece.position = Position(-1, -1);
                 }
+                PositionContent::Empty => (),
             }
-        },
+
+            let piece: &mut PositionContent = &mut game.board[usize::try_from(pos_1.0).unwrap()]
+                [usize::try_from(pos_1.1).unwrap()];
+
+            match piece {
+                PositionContent::PieceContent(piece) => {
+                    piece.position = pos_2.clone();
+                }
+                PositionContent::Empty => panic!("Tried to move an empty square!"),
+            }
+
+            game.board[usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()] =
+                piece.clone();
+            game.board[usize::try_from(pos_1.0).unwrap()][usize::try_from(pos_1.1).unwrap()] =
+                PositionContent::Empty;
+
+            game.turn = if game.turn == Colour::Black {
+                Colour::White
+            } else {
+                Colour::Black
+            };
+            check_completed(game);
+        }
     }
-    
+
     true
 }

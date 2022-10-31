@@ -1,5 +1,5 @@
+use crate::array::check_position_is_on_board;
 use crate::pieces::*;
-use crate::Array::check_position_is_on_board;
 use phf::phf_map;
 use std::collections::HashMap;
 

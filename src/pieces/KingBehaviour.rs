@@ -1,6 +1,6 @@
 use crate::{
+    array::get_surrounding_positions,
     types::{Array2D, Position, PositionContent, Shape},
-    Array::get_surrounding_positions,
 };
 
 use super::piece::Piece;

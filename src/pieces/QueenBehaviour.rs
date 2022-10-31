@@ -1,4 +1,7 @@
-use crate::{types::{Array2D, Position, Shape, PositionContent}, Array::{sort_by_distance, get_diagonal_positions, get_col_row_positions}};
+use crate::{
+    array::{get_col_row_positions, get_diagonal_positions, sort_by_distance},
+    types::{Array2D, Position, PositionContent, Shape},
+};
 
 use super::piece::Piece;
 
@@ -63,8 +66,8 @@ pub(crate) fn allowed_takes(
                         if tp_piece.is_white != piece.is_white {
                             filt_all_ts.push(take_pos)
                         }
-                        break
-                    },
+                        break;
+                    }
                     PositionContent::Empty => break,
                 }
             }

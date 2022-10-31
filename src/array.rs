@@ -18,10 +18,7 @@ fn filter_positions_off_board(positions: Vec<Position>, shape: &Shape) -> Vec<Po
         .collect()
 }
 
-pub(crate) fn get_col_row_positions(
-    pos: &Position,
-    shape: &Shape,
-) -> Vec<Vec<Vec<Position>>> {
+pub(crate) fn get_col_row_positions(pos: &Position, shape: &Shape) -> Vec<Vec<Vec<Position>>> {
     let mut new_positions = Vec::with_capacity(shape.0);
     for i in 0..shape.0 {
         new_positions.push(Position(i.try_into().unwrap(), pos.1))
