@@ -1,4 +1,4 @@
-use crate::types::{Array2D, Position, Shape};
+use crate::{types::{Array2D, Position, Shape, PositionContent}, Array::check_position_is_on_board};
 
 use super::piece::Piece;
 
@@ -9,7 +9,19 @@ pub(crate) fn allowed_moves(
     shape: &Shape,
     is_white: bool,
 ) -> Vec<Position> {
-    vec![]
+    let index: isize = if is_white { -1 } else { 1 };
+    let new_positions = vec![Position(pos.0 + index, pos.1)];
+    let new_positions: Vec<Position> = new_positions.into_iter().filter(|p| check_position_is_on_board(pos, shape)).collect();
+    let mut filt_all_ms: Vec<Position> = Vec::with_capacity(new_positions.len());
+    for move_pos in new_positions.into_iter() {
+        let mp_piece: &PositionContent =
+            &board[usize::try_from(move_pos.0).unwrap()][usize::try_from(move_pos.1).unwrap()];
+        match mp_piece {
+            PositionContent::PieceContent(_) => (),
+            PositionContent::Empty => filt_all_ms.push(move_pos),
+        }
+    }
+    filt_all_ms
 }
 
 pub(crate) fn allowed_takes(
@@ -19,5 +31,17 @@ pub(crate) fn allowed_takes(
     shape: &Shape,
     is_white: bool,
 ) -> Vec<Position> {
-    vec![]
+    let index: isize = if is_white { -1 } else { 1 };
+    let new_positions = vec![Position(pos.0 + index, pos.1)];
+    let new_positions: Vec<Position> = new_positions.into_iter().filter(|p| check_position_is_on_board(pos, shape)).collect();
+    let mut filt_all_ts: Vec<Position> = Vec::with_capacity(new_positions.len());
+    for take_pos in new_positions.into_iter() {
+        let tp_piece: &PositionContent =
+            &board[usize::try_from(take_pos.0).unwrap()][usize::try_from(take_pos.1).unwrap()];
+        match tp_piece {
+            PositionContent::PieceContent(_) => (),
+            PositionContent::Empty => filt_all_ts.push(take_pos),
+        }
+    }
+    filt_all_ts
 }

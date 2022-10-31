@@ -21,7 +21,7 @@ fn filter_positions_off_board(positions: Vec<Position>, shape: &Shape) -> Vec<Po
 pub(crate) fn get_col_row_positions(
     pos: &Position,
     shape: &Shape,
-) -> (Vec<Vec<Position>>, Vec<Vec<Position>>) {
+) -> Vec<Vec<Vec<Position>>> {
     let mut new_positions = Vec::with_capacity(shape.0);
     for i in 0..shape.0 {
         new_positions.push(Position(i.try_into().unwrap(), pos.1))
@@ -35,7 +35,7 @@ pub(crate) fn get_col_row_positions(
     }
 
     let row_positions = split_at_position(filter_positions_off_board(new_positions, shape), pos);
-    (column_positions, row_positions)
+    vec![column_positions, row_positions]
 }
 
 pub(crate) fn get_diagonal_positions(pos: &Position, shape: &Shape) -> Vec<Vec<Vec<Position>>> {
