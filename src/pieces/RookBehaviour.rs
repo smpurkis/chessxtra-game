@@ -18,9 +18,6 @@ pub(crate) fn allowed_moves(
         for dir_positions in positions {
             let dir_positions = sort_by_distance(pos, dir_positions);
             for move_pos in dir_positions.into_iter() {
-                if usize::try_from(move_pos.0).unwrap() > 4 {
-                    println!("Get here");
-                }
                 let row: &Vec<PositionContent> = &board[usize::try_from(move_pos.0).unwrap()];
                 let mp_piece: &PositionContent = &row[usize::try_from(move_pos.1).unwrap()];
                 match mp_piece {

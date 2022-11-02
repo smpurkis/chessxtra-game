@@ -88,10 +88,14 @@ pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Po
 fn split_at_position(positions: Vec<Position>, pos: &Position) -> Vec<Vec<Position>> {
     let index = 1;
     // TODO: May be able to remove .to_vec() and speed up by reducing allocations
-    vec![
-        positions[0..index].to_vec(),
-        positions[(index + 1)..positions.len()].to_vec(),
-    ]
+    if positions.len() == 1 {
+        vec![]
+    } else {
+        vec![
+            positions[0..index].to_vec(),
+            positions[(index + 1)..positions.len()].to_vec(),
+        ]
+    }
 }
 
 pub(crate) fn sort_by_distance(pos: &Position, positions: Vec<Position>) -> Vec<Position> {

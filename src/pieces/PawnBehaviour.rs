@@ -16,11 +16,10 @@ pub(crate) fn allowed_moves(
     let new_positions = vec![Position(pos.0 + index, pos.1)];
     let new_positions: Vec<Position> = new_positions
         .into_iter()
-        .filter(|p| check_position_is_on_board(pos, shape))
+        .filter(|p| check_position_is_on_board(p, shape))
         .collect();
     let mut filt_all_ms: Vec<Position> = Vec::with_capacity(new_positions.len());
     for move_pos in new_positions.into_iter() {
-        let mp0 = usize::try_from(move_pos.0);
         let mp_piece: &PositionContent =
             &board[usize::try_from(move_pos.0).unwrap()][usize::try_from(move_pos.1).unwrap()];
         match mp_piece {
@@ -42,7 +41,7 @@ pub(crate) fn allowed_takes(
     let new_positions = vec![Position(pos.0 + index, pos.1)];
     let new_positions: Vec<Position> = new_positions
         .into_iter()
-        .filter(|p| check_position_is_on_board(pos, shape))
+        .filter(|p| check_position_is_on_board(p, shape))
         .collect();
     let mut filt_all_ts: Vec<Position> = Vec::with_capacity(new_positions.len());
     for take_pos in new_positions.into_iter() {

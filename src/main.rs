@@ -5,9 +5,9 @@ mod types;
 use std::time::Instant;
 
 use game::{get_all_legal_moves_with_colour, move_piece, Colour};
-use rand::seq::SliceRandom;
+use rand::{prelude::StdRng, seq::SliceRandom, SeedableRng};
 
-use crate::game::Game;
+use crate::game::{Game, print_board};
 
 #[derive(Debug)]
 struct Outcomes {
@@ -17,11 +17,19 @@ struct Outcomes {
 
 fn run_random_games(n: usize) {
     let mut outcomes = Outcomes { white: 0, black: 0 };
-    let mut rng = rand::thread_rng();
+    // let mut rng = rand::thread_rng();
+    let mut rng = StdRng::seed_from_u64(42);
     for _ in 0..n {
         let mut game = Game::new();
         while !game.completed {
             let legal_moves = get_all_legal_moves_with_colour(&game, game.turn.clone());
+            if legal_moves.len() == 0 {
+                print_board(&game);
+                println!("no moves");
+            }
+            if game.moves.len() > 10_000 {
+                println!("Too many moves");
+            }
             let chosen_piece = &**legal_moves
                 .keys()
                 .into_iter()

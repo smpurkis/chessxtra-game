@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt::format;
 
 use crate::pieces::piece::{self, get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
@@ -11,7 +12,7 @@ pub enum Colour {
 
 pub struct Game {
     board: Array2D,
-    moves: Vec<String>,
+    pub moves: Vec<String>,
     pub completed: bool,
     pub winner: Option<Colour>,
     pub turn: Colour,
@@ -34,6 +35,19 @@ impl Game {
         };
         let game = setup_position(game);
         game
+    }
+}
+
+pub fn print_board(game: &Game) {
+    for row in game.board.iter() {
+        let mut row_str = "".to_string();
+        for position_content in row.iter() {
+            match position_content {
+                PositionContent::PieceContent(piece) => row_str.push_str(&piece.symbol),
+                PositionContent::Empty => row_str.push_str("-"),
+            }
+        }
+        println!("{row_str:?}");
     }
 }
 
@@ -92,12 +106,12 @@ fn check_completed(mut game: &mut Game) {
         == 1;
 
     if !game.completed {
-        if white_king_exists || black_king_exists {
+        if white_king_exists && black_king_exists {
             game.winner = None;
-        } else if !white_king_exists || black_king_exists {
+        } else if !white_king_exists && black_king_exists {
             game.winner = Some(Colour::Black);
             game.completed = true;
-        } else if white_king_exists || !black_king_exists {
+        } else if white_king_exists && !black_king_exists {
             game.winner = Some(Colour::White);
             game.completed = true;
         } else {
@@ -175,7 +189,7 @@ pub fn move_piece(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bo
             allowed_new_positions.sort_unstable();
             allowed_new_positions.dedup();
 
-            if allowed_new_positions.contains(&&pos_2) {
+            if !allowed_new_positions.contains(&&pos_2) {
                 panic!["Illegal move detected!"]
             }
 
