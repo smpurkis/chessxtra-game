@@ -20,6 +20,7 @@ pub(crate) fn allowed_moves(
         .collect();
     let mut filt_all_ms: Vec<Position> = Vec::with_capacity(new_positions.len());
     for move_pos in new_positions.into_iter() {
+        let mp0 = usize::try_from(move_pos.0);
         let mp_piece: &PositionContent =
             &board[usize::try_from(move_pos.0).unwrap()][usize::try_from(move_pos.1).unwrap()];
         match mp_piece {

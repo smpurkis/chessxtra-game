@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::pieces::piece::{self, get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Colour {
     White,
     Black,
@@ -24,7 +24,7 @@ impl Game {
         let setup = "rnbk\npppp";
         let shape = Shape(6, 4);
         let game = Game {
-            board: vec![vec![PositionContent::Empty; shape.0]; shape.1],
+            board: vec![vec![PositionContent::Empty; shape.1]; shape.0],
             moves: vec![],
             completed: false,
             winner: None,
@@ -44,13 +44,35 @@ fn setup_position(mut game: Game) -> Game {
         .map(|s: &str| s.chars().collect())
         .collect();
     for (piece_code, col_no) in setup_lines[0].iter().zip(0..game.shape.0) {
-        let piece = Piece::new(
+        let black_piece = Piece::new(
             Position(0, col_no.try_into().unwrap()),
             piece_code.to_string(),
         );
-        game.board[0][col_no] = PositionContent::PieceContent(piece);
+        let white_piece = Piece::new(
+            Position(
+                (game.shape.0 - 1).try_into().unwrap(),
+                col_no.try_into().unwrap(),
+            ),
+            piece_code.to_string().to_uppercase(),
+        );
+        game.board[0][col_no] = PositionContent::PieceContent(black_piece);
+        game.board[game.shape.0 - 1][col_no] = PositionContent::PieceContent(white_piece);
     }
-
+    for (piece_code, col_no) in setup_lines[1].iter().zip(0..game.shape.0) {
+        let black_piece = Piece::new(
+            Position(1, col_no.try_into().unwrap()),
+            piece_code.to_string(),
+        );
+        let white_piece = Piece::new(
+            Position(
+                (game.shape.0 - 2).try_into().unwrap(),
+                col_no.try_into().unwrap(),
+            ),
+            piece_code.to_string().to_uppercase(),
+        );
+        game.board[1][col_no] = PositionContent::PieceContent(black_piece);
+        game.board[game.shape.0 - 2][col_no] = PositionContent::PieceContent(white_piece);
+    }
     game
 }
 
@@ -89,8 +111,9 @@ pub fn get_all_legal_moves_with_colour(
     colour: Colour,
 ) -> HashMap<&Piece, Vec<Position>> {
     let mut legal_moves = HashMap::new();
-    let white_pieces = get_pieces_with_colour(&game, Colour::White);
-    white_pieces.into_iter().for_each(|piece| {
+    // get_pieces(&game).into_iter().for_each(|p| println!("{:?}", p));
+    let colour_pieces = get_pieces_with_colour(&game, colour);
+    colour_pieces.into_iter().for_each(|piece| {
         if piece.in_play {
             let piece_legal_moves: Vec<Position> = get_legal_moves(piece, &game.board, &game.shape);
             if piece_legal_moves.len() > 0 {
@@ -119,7 +142,11 @@ fn get_pieces_with_colour<'a>(game: &'a Game, colour: Colour) -> Vec<&'a Piece> 
     for row in &game.board {
         for square in row {
             match square {
-                PositionContent::PieceContent(piece) => pieces.push(piece),
+                PositionContent::PieceContent(piece) => {
+                    if piece.colour == colour {
+                        pieces.push(piece);
+                    }
+                }
                 PositionContent::Empty => (),
             };
         }
@@ -156,15 +183,22 @@ pub fn move_piece(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bo
                 return true;
             }
 
-            // let move_str = format!("{0}{1}{2}->", piece.symbol, pos_1.0, pos_1.1);
+            let mut move_str = format!("{0}{1}{2}->", piece.symbol, pos_1.0, pos_1.1);
+
             let take_piece: &mut PositionContent = &mut game.board
                 [usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()];
             match take_piece {
                 PositionContent::PieceContent(take_piece) => {
                     take_piece.in_play = false;
                     take_piece.position = Position(-1, -1);
+                    move_str = format!(
+                        "{0}{1:?}{2}{3}",
+                        move_str, take_piece.position, pos_2.0, pos_2.1
+                    );
                 }
-                PositionContent::Empty => (),
+                PositionContent::Empty => {
+                    move_str = format!("{0}{1}{2}", move_str, pos_2.0, pos_2.1);
+                }
             }
 
             let piece: &mut PositionContent = &mut game.board[usize::try_from(pos_1.0).unwrap()]
@@ -176,6 +210,7 @@ pub fn move_piece(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bo
                 }
                 PositionContent::Empty => panic!("Tried to move an empty square!"),
             }
+            game.moves.push(move_str);
 
             game.board[usize::try_from(pos_2.0).unwrap()][usize::try_from(pos_2.1).unwrap()] =
                 piece.clone();

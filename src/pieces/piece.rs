@@ -1,7 +1,7 @@
-use crate::array::check_position_is_on_board;
 use crate::pieces::*;
+use crate::{array::check_position_is_on_board, game::Colour};
 use phf::phf_map;
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 use crate::types::{Array2D, PieceClass, Position, Shape};
 
@@ -37,7 +37,7 @@ pub struct Piece {
     pub(crate) symbol: String,
     pub(crate) full_symbol: PieceClass,
     pub(crate) is_white: bool,
-    pub(crate) colour: String,
+    pub(crate) colour: Colour,
     pub(crate) in_play: bool,
     has_moved: bool,
 }
@@ -52,13 +52,19 @@ impl Piece {
             full_symbol: PIECE_CODE_HASHMAP[&symbol as &str],
             is_white: symbol_is_upper,
             colour: if symbol_is_upper {
-                "white".to_owned()
+                Colour::White
             } else {
-                "black".to_owned()
+                Colour::Black
             },
             in_play: true,
             has_moved: false,
         }
+    }
+}
+
+impl Display for Piece {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.symbol)
     }
 }
 
