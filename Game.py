@@ -42,8 +42,8 @@ def initialize_game(
     game = Game(
         shape=shape,
         setup=setup,
-        # board=Array2D(shape=shape),
-        board=np.full(shape=shape, fill_value="-", dtype=object),
+        board=Array2D(shape=shape),
+        # board=np.full(shape=shape, fill_value="-", dtype=object),
         board_state=board_state,
         completed=False,
         moves=[],
