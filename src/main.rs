@@ -5,6 +5,7 @@ mod types;
 use std::time::Instant;
 
 use game::{get_all_legal_moves_with_colour, move_piece, Colour};
+use indicatif::ProgressIterator;
 use rand::{prelude::StdRng, seq::SliceRandom, SeedableRng};
 
 use crate::game::{print_board, Game};
@@ -19,7 +20,7 @@ fn run_random_games(n: usize) {
     let mut outcomes = Outcomes { white: 0, black: 0 };
     // let mut rng = rand::thread_rng();
     let mut rng = StdRng::seed_from_u64(0);
-    for _ in 0..n {
+    for _ in (0..n).progress() {
         let mut game = Game::new();
         // let setup = "--PK\n--kp\n-p-P\npP--\nP---\n----";
         // let mut game = Game::from_position(setup.to_string());
@@ -64,6 +65,6 @@ fn run_random_games(n: usize) {
 
 fn main() {
     let timer = Instant::now();
-    run_random_games(10_000);
+    run_random_games(500);
     println!("{:?}", timer.elapsed());
 }
