@@ -6,11 +6,11 @@ use crate::{
 use super::piece::Piece;
 
 pub(crate) fn allowed_moves(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let surrounding_positions = get_surrounding_positions(pos, shape);
     let mut filt_all_ms: Vec<Position> = Vec::with_capacity(surrounding_positions.len());
@@ -26,11 +26,11 @@ pub(crate) fn allowed_moves(
 }
 
 pub(crate) fn allowed_takes(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let surrounding_positions = get_surrounding_positions(pos, shape);
     let mut filt_all_ts: Vec<Position> = Vec::with_capacity(surrounding_positions.len());

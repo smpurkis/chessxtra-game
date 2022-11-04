@@ -6,7 +6,7 @@ use crate::{
 use super::piece::Piece;
 
 pub(crate) fn allowed_moves(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
@@ -31,7 +31,7 @@ pub(crate) fn allowed_moves(
 }
 
 pub(crate) fn allowed_takes(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,

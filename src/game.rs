@@ -1,7 +1,7 @@
 use std::collections::HashMap;
-use std::fmt::format;
 
-use crate::pieces::piece::{self, get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
+
+use crate::pieces::piece::{get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]

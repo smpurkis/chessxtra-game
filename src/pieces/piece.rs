@@ -1,7 +1,7 @@
 use crate::pieces::*;
 use crate::{array::check_position_is_on_board, game::Colour};
 use phf::phf_map;
-use std::{collections::HashMap, fmt::Display};
+use std::{fmt::Display};
 
 use crate::types::{Array2D, PieceClass, Position, Shape};
 

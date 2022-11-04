@@ -1,4 +1,4 @@
-use std::fmt::{format, write, Display};
+use std::fmt::{Display};
 
 use crate::pieces::piece::Piece;
 

@@ -1,4 +1,4 @@
-use std::ops::Index;
+
 
 use crate::types::{Position, Shape};
 
@@ -88,7 +88,7 @@ pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Po
     filtered_positions
 }
 
-fn split_at_position(positions: Vec<Position>, pos: &Position) -> Vec<Vec<Position>> {
+fn split_at_position(positions: Vec<Position>, _pos: &Position) -> Vec<Vec<Position>> {
     let index = 1;
     // TODO: May be able to remove .to_vec() and speed up by reducing allocations
     if positions.len() == 1 {
@@ -105,6 +105,6 @@ pub(crate) fn sort_by_distance(pos: &Position, positions: Vec<Position>) -> Vec<
     let mut position_distances: Vec<(isize, Position)> =
         positions.into_iter().map(|p| (dist(&pos, &p), p)).collect();
     position_distances.sort_by(|a, b| a.0.cmp(&b.0));
-    let positions: Vec<Position> = position_distances.into_iter().map(|(d, p)| p).collect();
+    let positions: Vec<Position> = position_distances.into_iter().map(|(_d, p)| p).collect();
     positions
 }

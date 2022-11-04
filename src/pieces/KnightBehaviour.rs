@@ -1,16 +1,16 @@
 use crate::{
-    array::{get_l_positions, get_surrounding_positions},
+    array::{get_l_positions},
     types::{Array2D, Position, PositionContent, Shape},
 };
 
 use super::piece::Piece;
 
 pub(crate) fn allowed_moves(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let surrounding_positions = get_l_positions(pos, shape);
     let mut filt_all_ms: Vec<Position> = Vec::with_capacity(surrounding_positions.len());
@@ -30,7 +30,7 @@ pub(crate) fn allowed_takes(
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let surrounding_positions = get_l_positions(pos, shape);
     let mut filt_all_ts: Vec<Position> = Vec::with_capacity(surrounding_positions.len());

@@ -1,16 +1,16 @@
 use crate::{
-    array::{get_col_row_positions, get_diagonal_positions, sort_by_distance},
+    array::{get_col_row_positions, sort_by_distance},
     types::{Array2D, Position, PositionContent, Shape},
 };
 
 use super::piece::Piece;
 
 pub(crate) fn allowed_moves(
-    piece: &Piece,
+    _piece: &Piece,
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let col_row_positions = get_col_row_positions(pos, shape);
     let mut filt_all_ms: Vec<Position> = Vec::with_capacity(col_row_positions.len());
@@ -35,7 +35,7 @@ pub(crate) fn allowed_takes(
     board: &Array2D,
     pos: &Position,
     shape: &Shape,
-    is_white: bool,
+    _is_white: bool,
 ) -> Vec<Position> {
     let col_row_positions = get_col_row_positions(pos, shape);
     let mut filt_all_ts: Vec<Position> = Vec::with_capacity(col_row_positions.len());
