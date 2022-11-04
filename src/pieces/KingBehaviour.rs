@@ -38,8 +38,8 @@ pub(crate) fn allowed_takes(
         let tp_piece: &PositionContent =
             &board[usize::try_from(take_pos.0).unwrap()][usize::try_from(take_pos.1).unwrap()];
         match tp_piece {
-            PositionContent::PieceContent(_) => (),
-            PositionContent::Empty => filt_all_ts.push(take_pos),
+            PositionContent::PieceContent(_) => filt_all_ts.push(take_pos),
+            PositionContent::Empty => (),
         }
     }
     filt_all_ts

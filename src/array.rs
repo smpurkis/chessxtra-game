@@ -78,6 +78,9 @@ pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Po
     let mut new_positions: Vec<Position> = Vec::with_capacity(9);
     for i in -1_isize..=1 {
         for j in -1_isize..=1 {
+            if i == 0 && j == 0 {
+                continue;
+            };
             new_positions.push(Position(pos.0 + i, pos.1 + j))
         }
     }

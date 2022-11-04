@@ -31,7 +31,27 @@ impl Game {
             winner: None,
             turn: Colour::White,
             setup: setup.to_owned(),
-            shape: shape,
+            shape,
+        };
+        let game = setup_start_position(game);
+        game
+    }
+
+    pub fn from_position(setup: String) -> Self {
+        let setup_lines = setup.split("\n").collect::<Vec<&str>>();
+        assert!(
+            setup_lines.iter().map(|s| s.len()).collect::<Vec<_>>()
+                == vec![setup_lines[0].len(); setup_lines.len()]
+        );
+        let shape = Shape(setup_lines.len(), setup_lines[0].len());
+        let game = Game {
+            board: vec![vec![PositionContent::Empty; shape.1]; shape.0],
+            moves: vec![],
+            completed: false,
+            winner: None,
+            turn: Colour::White,
+            setup: setup.to_owned(),
+            shape,
         };
         let game = setup_position(game);
         game
@@ -52,6 +72,32 @@ pub fn print_board(game: &Game) {
 }
 
 fn setup_position(mut game: Game) -> Game {
+    let setup_lines: Vec<Vec<char>> = game
+        .setup
+        .split("\n")
+        .map(|s: &str| s.chars().collect())
+        .collect();
+    for (row_no, setup_line) in setup_lines.into_iter().enumerate() {
+        for (col_no, piece_code) in setup_line.into_iter().enumerate() {
+            match piece_code {
+                '-' => {
+                    game.board[row_no][col_no] = PositionContent::Empty;
+                }
+                c => {
+                    let piece = Piece::new(
+                        Position(row_no.try_into().unwrap(), col_no.try_into().unwrap()),
+                        c.to_string(),
+                    );
+                    game.board[row_no][col_no] = PositionContent::PieceContent(piece)
+                }
+            };
+        }
+    }
+
+    game
+}
+
+fn setup_start_position(mut game: Game) -> Game {
     let setup_lines: Vec<Vec<char>> = game
         .setup
         .split("\n")
