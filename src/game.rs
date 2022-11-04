@@ -33,12 +33,12 @@ impl Game {
             setup: setup.to_owned(),
             shape,
         };
-        let game = setup_start_position(game);
-        game
+        
+        setup_start_position(game)
     }
 
     pub fn from_position(setup: String) -> Self {
-        let setup_lines = setup.split("\n").collect::<Vec<&str>>();
+        let setup_lines = setup.split('\n').collect::<Vec<&str>>();
         assert!(
             setup_lines.iter().map(|s| s.len()).collect::<Vec<_>>()
                 == vec![setup_lines[0].len(); setup_lines.len()]
@@ -53,8 +53,8 @@ impl Game {
             setup: setup.to_owned(),
             shape,
         };
-        let game = setup_position(game);
-        game
+        
+        setup_position(game)
     }
 }
 
@@ -64,7 +64,7 @@ pub fn print_board(game: &Game) {
         for position_content in row.iter() {
             match position_content {
                 PositionContent::PieceContent(piece) => row_str.push_str(&piece.symbol),
-                PositionContent::Empty => row_str.push_str("-"),
+                PositionContent::Empty => row_str.push('-'),
             }
         }
         println!("{row_str:?}");
@@ -74,7 +74,7 @@ pub fn print_board(game: &Game) {
 fn setup_position(mut game: Game) -> Game {
     let setup_lines: Vec<Vec<char>> = game
         .setup
-        .split("\n")
+        .split('\n')
         .map(|s: &str| s.chars().collect())
         .collect();
     for (row_no, setup_line) in setup_lines.into_iter().enumerate() {
@@ -100,7 +100,7 @@ fn setup_position(mut game: Game) -> Game {
 fn setup_start_position(mut game: Game) -> Game {
     let setup_lines: Vec<Vec<char>> = game
         .setup
-        .split("\n")
+        .split('\n')
         .map(|s: &str| s.chars().collect())
         .collect();
     for (piece_code, col_no) in setup_lines[0].iter().zip(0..game.shape.0) {
@@ -137,7 +137,7 @@ fn setup_start_position(mut game: Game) -> Game {
 }
 
 fn check_completed(mut game: &mut Game) {
-    let pieces = get_pieces(&game);
+    let pieces = get_pieces(game);
     let white_pieces: Vec<&&Piece> = pieces.iter().filter(|p: &&&Piece| p.is_white).collect();
     let black_pieces: Vec<&&Piece> = pieces.iter().filter(|p: &&&Piece| !p.is_white).collect();
     let white_king_exists = white_pieces
@@ -172,11 +172,11 @@ pub fn get_all_legal_moves_with_colour(
 ) -> HashMap<&Piece, Vec<Position>> {
     let mut legal_moves = HashMap::new();
     // get_pieces(&game).into_iter().for_each(|p| println!("{:?}", p));
-    let colour_pieces = get_pieces_with_colour(&game, colour);
+    let colour_pieces = get_pieces_with_colour(game, colour);
     colour_pieces.into_iter().for_each(|piece| {
         if piece.in_play {
             let piece_legal_moves: Vec<Position> = get_legal_moves(piece, &game.board, &game.shape);
-            if piece_legal_moves.len() > 0 {
+            if !piece_legal_moves.is_empty() {
                 legal_moves.insert(piece, piece_legal_moves);
             }
         }

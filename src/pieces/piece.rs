@@ -88,11 +88,11 @@ fn allowed_moves(
 
 pub(crate) fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_moves(piece, board, &piece.position, shape, piece.is_white);
-    let new_positions = new_positions
+    
+    new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))
-        .collect();
-    new_positions
+        .collect()
 }
 
 fn allowed_takes(
@@ -115,11 +115,11 @@ fn allowed_takes(
 
 pub(crate) fn get_allowed_takes(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_takes(piece, board, &piece.position, shape, piece.is_white);
-    let new_positions = new_positions
+    
+    new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))
-        .collect();
-    new_positions
+        .collect()
 }
 
 pub(crate) fn get_legal_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {

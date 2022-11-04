@@ -8,7 +8,7 @@ use game::{get_all_legal_moves_with_colour, move_piece, Colour};
 use indicatif::ProgressIterator;
 use rand::{prelude::StdRng, seq::SliceRandom, SeedableRng};
 
-use crate::game::{print_board, Game};
+use crate::game::Game;
 
 #[derive(Debug)]
 struct Outcomes {
@@ -22,18 +22,8 @@ fn run_random_games(n: usize) {
     let mut rng = StdRng::seed_from_u64(0);
     for _ in (0..n).progress() {
         let mut game = Game::new();
-        // let setup = "--PK\n--kp\n-p-P\npP--\nP---\n----";
-        // let mut game = Game::from_position(setup.to_string());
         while !game.completed {
             let legal_moves = get_all_legal_moves_with_colour(&game, game.turn.clone());
-            if legal_moves.len() == 0 {
-                print_board(&game);
-                println!("no moves");
-            }
-            if game.moves.len() > 10_000 {
-                print_board(&game);
-                println!("Too many moves");
-            }
             let chosen_piece = &**legal_moves
                 .keys()
                 .into_iter()

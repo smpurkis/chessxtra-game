@@ -3,8 +3,8 @@
 use crate::types::{Position, Shape};
 
 pub(crate) fn check_position_is_on_board(pos: &Position, shape: &Shape) -> bool {
-    (0 <= pos.0 && pos.0 + 1 <= shape.0.try_into().unwrap())
-        && (0 <= pos.1 && pos.1 + 1 <= shape.1.try_into().unwrap())
+    (0 <= pos.0 && pos.0 < shape.0.try_into().unwrap())
+        && (0 <= pos.1 && pos.1 < shape.1.try_into().unwrap())
 }
 
 fn dist(pos1: &Position, pos2: &Position) -> isize {
@@ -14,7 +14,7 @@ fn dist(pos1: &Position, pos2: &Position) -> isize {
 fn filter_positions_off_board(positions: Vec<Position>, shape: &Shape) -> Vec<Position> {
     positions
         .into_iter()
-        .filter(|pos| check_position_is_on_board(&pos, shape))
+        .filter(|pos| check_position_is_on_board(pos, shape))
         .collect()
 }
 
@@ -37,7 +37,7 @@ pub(crate) fn get_col_row_positions(pos: &Position, shape: &Shape) -> Vec<Vec<Ve
 
 pub(crate) fn get_diagonal_positions(pos: &Position, shape: &Shape) -> Vec<Vec<Vec<Position>>> {
     let mut diagonal_positions: Vec<_> = vec![];
-    for (a, b) in vec![(1, 1), (1, -1), (-1, 1), (-1, -1)] {
+    for (a, b) in &[(1, 1), (1, -1), (-1, 1), (-1, -1)] {
         let highest_board_shape = if shape.0 > shape.1 { shape.0 } else { shape.1 };
         let diagonal_range = highest_board_shape;
         let tmp_positions: Vec<Position> = (0..diagonal_range)
@@ -70,8 +70,8 @@ pub(crate) fn get_l_positions(pos: &Position, board_shape: &Shape) -> Vec<Positi
     for (i, j) in l_offsets {
         new_positions.push(Position(pos.0 + i, pos.1 + j))
     }
-    let positions = filter_positions_off_board(new_positions, board_shape);
-    positions
+    
+    filter_positions_off_board(new_positions, board_shape)
 }
 
 pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Position> {
@@ -84,8 +84,8 @@ pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Po
             new_positions.push(Position(pos.0 + i, pos.1 + j))
         }
     }
-    let filtered_positions = filter_positions_off_board(new_positions, shape);
-    filtered_positions
+    
+    filter_positions_off_board(new_positions, shape)
 }
 
 fn split_at_position(positions: Vec<Position>, _pos: &Position) -> Vec<Vec<Position>> {
@@ -103,7 +103,7 @@ fn split_at_position(positions: Vec<Position>, _pos: &Position) -> Vec<Vec<Posit
 
 pub(crate) fn sort_by_distance(pos: &Position, positions: Vec<Position>) -> Vec<Position> {
     let mut position_distances: Vec<(isize, Position)> =
-        positions.into_iter().map(|p| (dist(&pos, &p), p)).collect();
+        positions.into_iter().map(|p| (dist(pos, &p), p)).collect();
     position_distances.sort_by(|a, b| a.0.cmp(&b.0));
     let positions: Vec<Position> = position_distances.into_iter().map(|(_d, p)| p).collect();
     positions
