@@ -55,6 +55,6 @@ fn run_random_games(n: usize) {
 
 fn main() {
     let timer = Instant::now();
-    run_random_games(500);
+    run_random_games(10_000);
     println!("{:?}", timer.elapsed());
 }

@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 indicatif = "0.17.1"
 phf = { version = "0.11.1", features = ["macros"] }
+getrandom = { version = "^0.2", features = ["js"] }
 rand = "0.8.5"
