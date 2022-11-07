@@ -1,5 +1,5 @@
 interface Array2D {
-    shape: number[];
+    shape: Shape;
     data: Piece[][]
 }
 
