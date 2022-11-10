@@ -94,14 +94,14 @@ function start_setup(game: Game, setup_position: string): Game {
 		const piece_code = setup_lines[0][i]
 		const col_no = i
 		game.board.data[0][col_no] = make_piece([0, col_no], piece_code)
-		game.board.data[game.board.shape[0] - 1][col_no] = make_piece([game.board.shape[0] - 1, col_no], piece_code)
+		game.board.data[game.board.shape[0] - 1][col_no] = make_piece([game.board.shape[0] - 1, col_no], piece_code.toUpperCase())
 	}
 
 	for (const i of range(setup_lines[1].length)) {
 		const piece_code = setup_lines[1][i]
 		const col_no = i
 		game.board.data[1][col_no] = make_piece([1, col_no], piece_code)
-		game.board.data[game.board.shape[0] - 2][col_no] = make_piece([game.board.shape[0] - 2, col_no], piece_code)
+		game.board.data[game.board.shape[0] - 2][col_no] = make_piece([game.board.shape[0] - 2, col_no], piece_code.toUpperCase())
 	}
 
 	return game

@@ -57,7 +57,7 @@ const PIECE_CODE_OBJECT = {
 const PIECE_CODE_DICT: Map<string, PieceCode> = new Map(Object.entries(PIECE_CODE_OBJECT));
 
 export function make_piece(pos: Position, symbol: string): Piece {
-    const is_white = symbol[0].toUpperCase() === symbol[0]
+    const is_white = symbol.toUpperCase() === symbol
     return {
         position: pos,
         symbol: symbol,
