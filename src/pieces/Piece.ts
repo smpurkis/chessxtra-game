@@ -1,4 +1,5 @@
 import { Array2D, check_position_is_on_board } from "../Array";
+import { Colour, Position } from "../custom_types";
 import { bishop_allowed_moves, bishop_allowed_takes } from "./BishopBehaviour";
 import { king_allowed_moves, king_allowed_takes } from "./KingBehaviour";
 import { knight_allowed_moves, knight_allowed_takes } from "./KnightBehaviour";

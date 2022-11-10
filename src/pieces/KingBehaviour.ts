@@ -1,4 +1,5 @@
 import { Array2D, get_surrounding_positions } from "../Array"
+import { Position } from "../custom_types"
 import { Piece } from "./Piece"
 
 export function king_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {

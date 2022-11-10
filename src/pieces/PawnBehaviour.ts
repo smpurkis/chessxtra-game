@@ -1,4 +1,5 @@
 import { Array2D, check_position_is_on_board } from "../Array"
+import { Position } from "../custom_types"
 import { Piece } from "./Piece"
 
 export function pawn_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {

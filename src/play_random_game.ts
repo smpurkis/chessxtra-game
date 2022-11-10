@@ -1,3 +1,4 @@
+import { Colour, Position } from "./custom_types";
 import { get_all_legal_moves, initialize_game, move, range } from "./Game";
 
 const cliProgress = require('cli-progress');
@@ -16,6 +17,7 @@ function run_random_games(n: number): void {
             const legal_move_pieces = [...legal_moves.keys()]
             const chosen_piece = legal_move_pieces[Math.floor(Math.random() * legal_move_pieces.length)]
             const legal_move_positions: Position[] = legal_moves.get(chosen_piece)!
+            console.log(legal_move_positions)
             const chosen_move = legal_move_positions[Math.floor(Math.random() * legal_move_positions.length)]
         
             move(game, chosen_piece.position, chosen_move)

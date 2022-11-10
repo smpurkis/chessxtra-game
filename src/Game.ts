@@ -1,4 +1,5 @@
 import { Array2D } from "./Array";
+import { Colour, Position, Shape } from "./custom_types";
 import { get_allowed_moves, get_allowed_takes, get_legal_moves, make_piece, Piece, PieceCode } from "./pieces/Piece";
 
 interface Game {
@@ -33,7 +34,7 @@ export function initialize_game(shape: Shape = [6, 4], setup = "rnbk\npppp", boa
 		shape: shape,
 		data: data,
 	} as Array2D
-	const game: Game = {
+	let game: Game = {
 		shape: shape,
 		setup: setup,
 		board: array2d,
@@ -42,6 +43,11 @@ export function initialize_game(shape: Shape = [6, 4], setup = "rnbk\npppp", boa
 		moves: [],
 		turn: Colour.White,
 	} as Game
+	if (board_state === "") {
+		game = start_setup(game, setup)
+	} else {
+		game = setup_position(game, board_state)
+	}
 	return game
 }
 
@@ -84,15 +90,15 @@ function setup_position(game: Game, board_state: string): Game {
 function start_setup(game: Game, setup_position: string): Game {
 	const setup_lines = setup_position.split("\n")
 
-	for (const i of range(game.board.shape[0])) {
+	for (const i of range(setup_lines[0].length)) {
 		const piece_code = setup_lines[0][i]
 		const col_no = i
 		game.board.data[0][col_no] = make_piece([0, col_no], piece_code)
 		game.board.data[game.board.shape[0] - 1][col_no] = make_piece([game.board.shape[0] - 1, col_no], piece_code)
 	}
 
-	for (const i of range(game.board.shape[1])) {
-		const piece_code = setup_lines[0][i]
+	for (const i of range(setup_lines[1].length)) {
+		const piece_code = setup_lines[1][i]
 		const col_no = i
 		game.board.data[1][col_no] = make_piece([1, col_no], piece_code)
 		game.board.data[game.board.shape[0] - 2][col_no] = make_piece([game.board.shape[0] - 2, col_no], piece_code)

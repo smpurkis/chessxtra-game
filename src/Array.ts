@@ -1,3 +1,4 @@
+import { Position, Shape } from "./custom_types";
 import { range } from "./Game";
 import { Piece } from "./pieces/Piece";
 

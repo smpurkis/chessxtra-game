@@ -1,8 +1,8 @@
-type Position = [number, number];
-type Shape = [number, number];
+export type Position = [number, number];
+export type Shape = [number, number];
 
 
-enum Colour {
+export enum Colour {
 	White,
 	Black,
 }
