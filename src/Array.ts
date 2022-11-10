@@ -12,7 +12,7 @@ function check_position_is_on_board(position: Position, board_shape: Shape): boo
 }
 
 function filter_positions_off_board_list(positions: Position[], board_shape: Shape): Position[] {
-    let filtered_positions: Position[] = []
+    const filtered_positions: Position[] = []
     positions.forEach((pos: Position) => {
         if (check_position_is_on_board(pos, board_shape)) {
             filtered_positions.push(pos)
@@ -22,7 +22,7 @@ function filter_positions_off_board_list(positions: Position[], board_shape: Sha
 }
 
 function sort_by_distance(pos: Position, positions: Position[]): Position[] {
-    let position_distances: [number, Position][] = []
+    const position_distances: [number, Position][] = []
     positions.forEach((p) => {
         position_distances.push([dist(pos, p), p])
     })
@@ -57,7 +57,6 @@ function get_l_positions(pos: Position, board_shape: Shape): Position[] {
     return positions
 }
 
-const range = (n: number) => [...Array(n).keys()]
 
 function get_col_row_positions(pos: Position, board_shape: Shape): Position[][][] {
     const col_range = board_shape[0]
@@ -83,7 +82,7 @@ function get_col_row_positions(pos: Position, board_shape: Shape): Position[][][
 
 const diagonal_range: Position[] = [[-1, -1], [-1, 1], [1, -1], [1, 1]]
 function get_diagonal_positions(pos: Position, board_shape: Shape): Position[][][] {
-    let diagonal_positions: Position[][][] = []
+    const diagonal_positions: Position[][][] = []
     diagonal_range.forEach((ab) => {
         const a = ab[0]
         const b = ab[1]

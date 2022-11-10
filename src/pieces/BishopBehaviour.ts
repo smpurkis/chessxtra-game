@@ -1,9 +1,9 @@
 
 function bishop_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
-    let filt_all_ms: Position[] = []
+    const filt_all_ms: Position[] = []
     for (const positions of diagonal_positions) {
-        for (let dir_positions of positions) {
+        for (const dir_positions of positions) {
             dir_positions.sort()
             for (const move_pos of dir_positions) {
                 const mp_piece = board.data[move_pos[0]][move_pos[1]]
@@ -20,9 +20,9 @@ function bishop_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_wh
 
 function bishop_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
-    let filt_all_ts: Position[] = []
+    const filt_all_ts: Position[] = []
     for (const positions of diagonal_positions) {
-        for (let dir_positions of positions) {
+        for (const dir_positions of positions) {
             dir_positions.sort()
             for (const take_pos of dir_positions) {
                 const tp_piece = board.data[take_pos[0]][take_pos[1]]

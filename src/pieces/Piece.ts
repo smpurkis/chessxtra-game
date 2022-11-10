@@ -83,7 +83,7 @@ function allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: bo
 
 function get_allowed_moves(piece: Piece, board: Array2D): Position[] {
     const pos = piece.position
-    let new_positions = allowed_moves(piece, board, pos, piece.is_white)
+    const new_positions = allowed_moves(piece, board, pos, piece.is_white)
     return new_positions.filter((p) => check_position_is_on_board(p, board.shape))
 }
 
@@ -108,7 +108,7 @@ function allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: bo
 
 function get_allowed_takes(piece: Piece, board: Array2D): Position[] {
     const pos = piece.position
-    let new_positions = allowed_takes(piece, board, pos, piece.is_white)
+    const new_positions = allowed_takes(piece, board, pos, piece.is_white)
     return new_positions.filter((p) => check_position_is_on_board(p, board.shape))
 }
 
