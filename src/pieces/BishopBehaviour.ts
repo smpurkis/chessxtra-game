@@ -1,5 +1,7 @@
+import { Array2D, get_diagonal_positions } from "../Array"
+import { Piece } from "./Piece"
 
-function bishop_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function bishop_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
     const filt_all_ms: Position[] = []
     for (const positions of diagonal_positions) {
@@ -18,7 +20,7 @@ function bishop_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_wh
     return filt_all_ms
 }
 
-function bishop_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function bishop_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
     const filt_all_ts: Position[] = []
     for (const positions of diagonal_positions) {

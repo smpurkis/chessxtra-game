@@ -1,3 +1,6 @@
+import { Array2D } from "./Array";
+import { get_allowed_moves, get_allowed_takes, get_legal_moves, make_piece, Piece, PieceCode } from "./pieces/Piece";
+
 interface Game {
 	board: Array2D;
 	moves: string[];
@@ -9,9 +12,9 @@ interface Game {
 	board_state?: string | null;
 }
 
-const range = (n: number) => [...Array(n).keys()]
+export const range = (n: number) => [...Array(n).keys()]
 
-function initialize_game(shape: Shape = [6, 4], setup = "rnbk\npppp", board_state = ""): Game {
+export function initialize_game(shape: Shape = [6, 4], setup = "rnbk\npppp", board_state = ""): Game {
 	if (board_state !== "") {
 		shape = [board_state.split("\n").length, board_state.split("\n")[0].length]
 	}
@@ -98,7 +101,7 @@ function start_setup(game: Game, setup_position: string): Game {
 	return game
 }
 
-function get_all_legal_moves(game: Game, colour: Colour): Map<Piece, Position[]> {
+export function get_all_legal_moves(game: Game, colour: Colour): Map<Piece, Position[]> {
 	const legal_moves: Map<Piece, Position[]> = new Map()
 	for (const row_no of range(game.board.shape[0])) {
 		for (const col_no of range(game.board.shape[1])) {
@@ -131,7 +134,7 @@ function get_pieces(game: Game, colour: Colour | null = null): Piece[] {
 	return pieces
 }
 
-function move(game: Game, pos_1: Position, pos_2: Position): boolean {
+export function move(game: Game, pos_1: Position, pos_2: Position): boolean {
 	const piece = game.board.data[pos_1[0]][pos_1[1]]
 
 	if (piece.is_empty) {

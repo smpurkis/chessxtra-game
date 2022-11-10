@@ -1,4 +1,7 @@
-interface Array2D {
+import { range } from "./Game";
+import { Piece } from "./pieces/Piece";
+
+export interface Array2D {
     shape: Shape;
     data: Piece[][]
 }
@@ -7,11 +10,11 @@ function dist(pos1: Position, pos2: Position): number {
     return Math.abs(pos1[0] - pos2[0]) - Math.abs(pos1[1] - pos2[1])
 }
 
-function check_position_is_on_board(position: Position, board_shape: Shape): boolean {
+export function check_position_is_on_board(position: Position, board_shape: Shape): boolean {
     return (0 <= position[0] && position[0] <= board_shape[0] - 1) && (0 <= position[1] && position[1] <= board_shape[1] - 1)
 }
 
-function filter_positions_off_board_list(positions: Position[], board_shape: Shape): Position[] {
+export function filter_positions_off_board_list(positions: Position[], board_shape: Shape): Position[] {
     const filtered_positions: Position[] = []
     positions.forEach((pos: Position) => {
         if (check_position_is_on_board(pos, board_shape)) {
@@ -21,7 +24,7 @@ function filter_positions_off_board_list(positions: Position[], board_shape: Sha
     return filtered_positions
 }
 
-function sort_by_distance(pos: Position, positions: Position[]): Position[] {
+export function sort_by_distance(pos: Position, positions: Position[]): Position[] {
     const position_distances: [number, Position][] = []
     positions.forEach((p) => {
         position_distances.push([dist(pos, p), p])
@@ -38,7 +41,7 @@ function split_at_position(positions: Position[], pos: Position): Position[][] {
     return [positions_1, positions_2]
 }
 
-function get_surrounding_positions(pos: Position, board_shape: Shape): Position[] {
+export function get_surrounding_positions(pos: Position, board_shape: Shape): Position[] {
     const indices: number[] = [-1, 0, 1]
     let positions: Position[] = []
     indices.forEach((i: number) => {
@@ -51,14 +54,14 @@ function get_surrounding_positions(pos: Position, board_shape: Shape): Position[
 }
 
 const l_offsets: Position[] = [[-1, 2], [1, 2], [-1, -2], [1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]]
-function get_l_positions(pos: Position, board_shape: Shape): Position[] {
+export function get_l_positions(pos: Position, board_shape: Shape): Position[] {
     let positions: Position[] = l_offsets.map((ij: number[]) => [pos[0] + ij[0], pos[1] + ij[1]])
     positions = filter_positions_off_board_list(positions, pos)
     return positions
 }
 
 
-function get_col_row_positions(pos: Position, board_shape: Shape): Position[][][] {
+export function get_col_row_positions(pos: Position, board_shape: Shape): Position[][][] {
     const col_range = board_shape[0]
     const row_range = board_shape[1]
 
@@ -81,7 +84,7 @@ function get_col_row_positions(pos: Position, board_shape: Shape): Position[][][
 
 
 const diagonal_range: Position[] = [[-1, -1], [-1, 1], [1, -1], [1, 1]]
-function get_diagonal_positions(pos: Position, board_shape: Shape): Position[][][] {
+export function get_diagonal_positions(pos: Position, board_shape: Shape): Position[][][] {
     const diagonal_positions: Position[][][] = []
     diagonal_range.forEach((ab) => {
         const a = ab[0]

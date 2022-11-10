@@ -1,4 +1,7 @@
+import { get_all_legal_moves, initialize_game, move, range } from "./Game";
+
 const cliProgress = require('cli-progress');
+
 
 function run_random_games(n: number): void {
     let outcomes = new Map()
@@ -12,7 +15,8 @@ function run_random_games(n: number): void {
             const legal_moves = get_all_legal_moves(game, game.turn)
             const legal_move_pieces = [...legal_moves.keys()]
             const chosen_piece = legal_move_pieces[Math.floor(Math.random() * legal_move_pieces.length)]
-            const chosen_move = legal_moves.get(chosen_piece)[Math.floor(Math.random() * legal_moves.get(chosen_piece).length)]
+            const legal_move_positions: Position[] = legal_moves.get(chosen_piece)!
+            const chosen_move = legal_move_positions[Math.floor(Math.random() * legal_move_positions.length)]
         
             move(game, chosen_piece.position, chosen_move)
         }

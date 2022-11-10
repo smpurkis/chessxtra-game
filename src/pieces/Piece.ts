@@ -1,6 +1,12 @@
-const KingBehaviour = require("KingBehaviour");
+import { Array2D, check_position_is_on_board } from "../Array";
+import { bishop_allowed_moves, bishop_allowed_takes } from "./BishopBehaviour";
+import { king_allowed_moves, king_allowed_takes } from "./KingBehaviour";
+import { knight_allowed_moves, knight_allowed_takes } from "./KnightBehaviour";
+import { pawn_allowed_moves, pawn_allowed_takes } from "./PawnBehaviour";
+import { queen_allowed_moves, queen_allowed_takes } from "./QueenBehaviour";
+import { rook_allowed_moves, rook_allowed_takes } from "./RookBehaviour";
 
-enum PieceCode {
+export enum PieceCode {
     KING,
     QUEEN,
     ROOK,
@@ -10,7 +16,7 @@ enum PieceCode {
 }
 
 
-interface Piece {
+export interface Piece {
 	position: Position;
 	symbol?: string;
 	full_symbol?: PieceCode;
@@ -49,7 +55,7 @@ const PIECE_CODE_OBJECT = {
 }
 const PIECE_CODE_DICT: Map<string, PieceCode> = new Map(Object.entries(PIECE_CODE_OBJECT));
 
-function make_piece(pos: Position, symbol: string): Piece {
+export function make_piece(pos: Position, symbol: string): Piece {
     const is_white = symbol.toUpperCase() === symbol
     return {
         position: pos,
@@ -81,7 +87,7 @@ function allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: bo
     return allowed_moves_array
 }
 
-function get_allowed_moves(piece: Piece, board: Array2D): Position[] {
+export function get_allowed_moves(piece: Piece, board: Array2D): Position[] {
     const pos = piece.position
     const new_positions = allowed_moves(piece, board, pos, piece.is_white)
     return new_positions.filter((p) => check_position_is_on_board(p, board.shape))
@@ -106,16 +112,15 @@ function allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: bo
     return allowed_takes_array
 }
 
-function get_allowed_takes(piece: Piece, board: Array2D): Position[] {
+export function get_allowed_takes(piece: Piece, board: Array2D): Position[] {
     const pos = piece.position
     const new_positions = allowed_takes(piece, board, pos, piece.is_white)
     return new_positions.filter((p) => check_position_is_on_board(p, board.shape))
 }
 
-function get_legal_moves(piece: Piece, board: Array2D): Position[] {
+export function get_legal_moves(piece: Piece, board: Array2D): Position[] {
     const allowed_moves = get_allowed_moves(piece, board)
     const allowed_takes = get_allowed_takes(piece, board)
     const allowed: Position[] = [...allowed_moves, ...allowed_takes]
     return [...new Set(allowed)]
 }
-

@@ -1,4 +1,7 @@
-function king_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+import { Array2D, get_surrounding_positions } from "../Array"
+import { Piece } from "./Piece"
+
+export function king_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const surrounding_positions = get_surrounding_positions(pos, board.shape)
     const filt_all_ms: Position[] = []
     for (const move_pos of surrounding_positions) {
@@ -10,7 +13,7 @@ function king_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_whit
     return filt_all_ms
 }
 
-function king_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function king_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const surrounding_positions = get_surrounding_positions(pos, board.shape)
     const filt_all_ts: Position[] = []
     for (const take_pos of surrounding_positions) {

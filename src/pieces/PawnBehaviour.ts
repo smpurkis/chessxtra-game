@@ -1,4 +1,7 @@
-function pawn_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+import { Array2D, check_position_is_on_board } from "../Array"
+import { Piece } from "./Piece"
+
+export function pawn_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const index = is_white ? -1 : 1
     let new_positions: Position[] = [[pos[0] + index, pos[1]]]
     new_positions = new_positions.filter((p) => check_position_is_on_board(p, board.shape))
@@ -12,7 +15,7 @@ function pawn_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_whit
     return filt_all_ms
 }
 
-function pawn_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function pawn_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const index = is_white ? -1 : 1
     let new_positions: Position[] = [-1, 1].map((row_i) => [pos[0] + index, pos[1] + row_i])
     new_positions = new_positions.filter((p) => check_position_is_on_board(p, board.shape))

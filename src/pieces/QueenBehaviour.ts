@@ -1,5 +1,7 @@
+import { Array2D, get_col_row_positions, get_diagonal_positions } from "../Array"
+import { Piece } from "./Piece"
 
-function queen_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function queen_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const col_row_positions = get_col_row_positions(pos, board.shape)
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
     const position_lines = [col_row_positions, diagonal_positions].flat()
@@ -20,7 +22,7 @@ function queen_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_whi
     return filt_all_ms
 }
 
-function queen_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function queen_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const col_row_positions = get_col_row_positions(pos, board.shape)
     const diagonal_positions = get_diagonal_positions(pos, board.shape)
     const position_lines = [col_row_positions, diagonal_positions].flat()

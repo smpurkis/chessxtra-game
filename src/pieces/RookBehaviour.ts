@@ -1,5 +1,7 @@
+import { Array2D, get_col_row_positions } from "../Array"
+import { Piece } from "./Piece"
 
-function rook_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function rook_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const col_row_positions = get_col_row_positions(pos, board.shape)
     const filt_all_ms: Position[] = []
     for (const positions of col_row_positions) {
@@ -18,7 +20,7 @@ function rook_allowed_moves(piece: Piece, board: Array2D, pos: Position, is_whit
     return filt_all_ms
 }
 
-function rook_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
+export function rook_allowed_takes(piece: Piece, board: Array2D, pos: Position, is_white: boolean): Position[] {
     const col_row_positions = get_col_row_positions(pos, board.shape)
     const filt_all_ts: Position[] = []
     for (const positions of col_row_positions) {
