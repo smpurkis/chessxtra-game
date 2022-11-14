@@ -14,6 +14,16 @@ pub enum Colour {
     Black,
 }
 
+#[pymethods]
+impl Colour {
+    fn __hash__(&self) -> isize {
+        match self {
+            Colour::White => 0,
+            Colour::Black => 1,
+        }
+    }
+}
+
 #[pyclass]
 #[derive(Debug, Clone)]
 pub struct Game {
@@ -31,6 +41,7 @@ pub struct Game {
     setup: String,
     #[pyo3(get)]
     shape: Shape,
+    
 }
 
 #[pymethods]
@@ -251,10 +262,10 @@ fn get_pieces_with_colour<'a>(game: &'a Game, colour: Colour) -> Vec<&'a Piece> 
 }
 
 fn check_move(game: &mut Game, pos_1: Position, pos_2: Position) -> bool {
-    move_piece(game, pos_1, pos_2, true)
+    move_piece_position(game, pos_1, pos_2, true)
 }
 
-pub fn move_piece(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bool) -> bool {
+pub fn move_piece_position(game: &mut Game, pos_1: Position, pos_2: Position, dry_run: bool) -> bool {
     let piece: &PositionContent =
         &game.board[usize::try_from(pos_1.0).unwrap()][usize::try_from(pos_1.1).unwrap()];
 
