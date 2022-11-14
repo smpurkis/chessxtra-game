@@ -23,7 +23,7 @@ fn run_random_games(n: usize) {
     for _ in (0..n).progress() {
         let mut game = Game::new();
         while !game.completed {
-            let legal_moves = get_all_legal_moves_with_colour(&game, game.turn.clone());
+            let legal_moves = get_all_legal_moves_with_colour(&game, game.turn);
             let chosen_piece = &**legal_moves
                 .keys()
                 .into_iter()

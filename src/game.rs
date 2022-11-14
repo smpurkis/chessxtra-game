@@ -1,26 +1,41 @@
 use std::collections::HashMap;
 
+use pyo3::prelude::*;
+use pyo3::types::PyList;
+use pyo3::{pyclass, IntoPy, PyObject, PyResult, Python};
 
 use crate::pieces::piece::{get_allowed_moves, get_allowed_takes, get_legal_moves, Piece};
 use crate::types::{Array2D, PieceClass, Position, PositionContent, Shape};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[pyclass]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Colour {
     White,
     Black,
 }
 
+#[pyclass]
+#[derive(Debug, Clone)]
 pub struct Game {
+    // #[pyo3(get)]
     board: Array2D,
+    #[pyo3(get)]
     pub moves: Vec<String>,
+    #[pyo3(get)]
     pub completed: bool,
+    #[pyo3(get)]
     pub winner: Option<Colour>,
+    #[pyo3(get)]
     pub turn: Colour,
+    #[pyo3(get)]
     setup: String,
+    #[pyo3(get)]
     shape: Shape,
 }
 
+#[pymethods]
 impl Game {
+    #[staticmethod]
     pub fn new() -> Self {
         let setup = "rnbk\npppp";
         let shape = Shape(6, 4);
@@ -33,10 +48,11 @@ impl Game {
             setup: setup.to_owned(),
             shape,
         };
-        
+
         setup_start_position(game)
     }
 
+    #[staticmethod]
     pub fn from_position(setup: String) -> Self {
         let setup_lines = setup.split('\n').collect::<Vec<&str>>();
         assert!(
@@ -53,8 +69,28 @@ impl Game {
             setup: setup.to_owned(),
             shape,
         };
-        
+
         setup_position(game)
+    }
+
+    #[getter]
+    fn board(&self) -> PyResult<PyObject> {
+        Python::with_gil(|py| {
+            let pylist_array = PyList::empty(py);
+            self.board.clone().into_iter().for_each(|row| {
+                let pylist_row = PyList::empty(py);
+                row.into_iter().for_each(|piece_content| {
+                    match piece_content {
+                        PositionContent::PieceContent(piece) => {
+                            pylist_row.append(piece.into_py(py)).unwrap()
+                        }
+                        PositionContent::Empty => pylist_row.append("-").unwrap(),
+                    };
+                });
+                pylist_array.append(pylist_row).unwrap();
+            });
+            Ok(pylist_array.into())
+        })
     }
 }
 

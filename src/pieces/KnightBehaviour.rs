@@ -1,5 +1,5 @@
 use crate::{
-    array::{get_l_positions},
+    array::get_l_positions,
     types::{Array2D, Position, PositionContent, Shape},
 };
 

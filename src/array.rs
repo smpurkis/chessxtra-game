@@ -1,5 +1,3 @@
-
-
 use crate::types::{Position, Shape};
 
 pub(crate) fn check_position_is_on_board(pos: &Position, shape: &Shape) -> bool {
@@ -70,7 +68,7 @@ pub(crate) fn get_l_positions(pos: &Position, board_shape: &Shape) -> Vec<Positi
     for (i, j) in l_offsets {
         new_positions.push(Position(pos.0 + i, pos.1 + j))
     }
-    
+
     filter_positions_off_board(new_positions, board_shape)
 }
 
@@ -84,7 +82,7 @@ pub(crate) fn get_surrounding_positions(pos: &Position, shape: &Shape) -> Vec<Po
             new_positions.push(Position(pos.0 + i, pos.1 + j))
         }
     }
-    
+
     filter_positions_off_board(new_positions, shape)
 }
 

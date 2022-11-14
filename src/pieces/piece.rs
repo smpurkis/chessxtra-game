@@ -1,7 +1,8 @@
 use crate::pieces::*;
 use crate::{array::check_position_is_on_board, game::Colour};
 use phf::phf_map;
-use std::{fmt::Display};
+use pyo3::pyclass;
+use std::fmt::Display;
 
 use crate::types::{Array2D, PieceClass, Position, Shape};
 
@@ -31,14 +32,23 @@ static PIECE_CODE_HASHMAP: phf::Map<&'static str, PieceClass> = phf_map! {
     "r" => PieceClass::Rook,
     "rook" => PieceClass::Rook,
 };
+
+#[pyclass]
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Piece {
+    #[pyo3(get)]
     pub(crate) position: Position,
+    #[pyo3(get)]
     pub(crate) symbol: String,
+    #[pyo3(get)]
     pub(crate) full_symbol: PieceClass,
+    #[pyo3(get)]
     pub(crate) is_white: bool,
+    #[pyo3(get)]
     pub(crate) colour: Colour,
+    #[pyo3(get)]
     pub(crate) in_play: bool,
+    #[pyo3(get)]
     has_moved: bool,
 }
 
@@ -88,7 +98,7 @@ fn allowed_moves(
 
 pub(crate) fn get_allowed_moves(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_moves(piece, board, &piece.position, shape, piece.is_white);
-    
+
     new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))
@@ -115,7 +125,7 @@ fn allowed_takes(
 
 pub(crate) fn get_allowed_takes(piece: &Piece, board: &Array2D, shape: &Shape) -> Vec<Position> {
     let new_positions = allowed_takes(piece, board, &piece.position, shape, piece.is_white);
-    
+
     new_positions
         .into_iter()
         .filter(|pos| check_position_is_on_board(pos, shape))

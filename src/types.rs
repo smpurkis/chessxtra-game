@@ -1,12 +1,26 @@
-use std::fmt::{Display};
+use std::fmt::Display;
+
+use pyo3::{pyclass, IntoPy, PyObject};
 
 use crate::pieces::piece::Piece;
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Position(pub isize, pub isize);
 
+impl IntoPy<PyObject> for Position {
+    fn into_py(self, py: pyo3::Python<'_>) -> PyObject {
+        (self.0, self.1).into_py(py)
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct Shape(pub usize, pub usize);
+
+impl IntoPy<PyObject> for Shape {
+    fn into_py(self, py: pyo3::Python<'_>) -> PyObject {
+        (self.0, self.1).into_py(py)
+    }
+}
 
 #[derive(Debug, Clone)]
 pub enum PositionContent {
@@ -23,6 +37,7 @@ impl Display for PositionContent {
     }
 }
 
+#[pyclass]
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub(crate) enum PieceClass {
     King,
